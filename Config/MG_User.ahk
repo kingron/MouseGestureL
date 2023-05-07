@@ -156,7 +156,7 @@ goto End
 	ClipBoard = %Clip0%
 	VarSetCapacity(Clip0, 0)
 	Return
-
+#!v::Run rundll32.exe sysdm.cpl`,EditEnvironmentVariables
 #w::WinClose,A
 ; #x:: 移动中心
 #y:: MouseClick, right
