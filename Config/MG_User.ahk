@@ -162,16 +162,34 @@ goto End
 #y:: MouseClick, right
 #z::Run procexp.exe
 #^z::
-	Gui, New, +LastFound +Resize +ToolWindow +MinSize200x150 +AlwaysOnTop
-	Gui, Font, s16
-    Gui, Add, Text, x10 y10 w580 h20 left, 请输入表达式：
-    Gui, Add, Edit, x10 y40 w490 h30 Resize r1 vInputText, % left(Clipboard, "`n")
-    Gui, Add, Button, x510 y40 w80 h30 vCalcButton gCalcOK Default, 计算
-    Gui, Add, Edit, x10 y80 w580 h390 vResultText Resize,
-    Gui, Show, w600 h480, 计算器
+	Gui, Calc:New, +LastFound +Resize +ToolWindow +MinSize200x150 +AlwaysOnTop
+	Gui, Calc:Font, s16
+    Gui, Calc:Add, Text, x10 y10 w580 h20 left, 请输入表达式，按 Ctrl + D，清空结果框：
+    Gui, Calc:Add, Edit, x10 y40 w490 h30 Resize r1 vInputText -background, % left(Clipboard, "`n")
+    Gui, Calc:Add, Button, x510 y40 w80 h30 vCalcButton gCalcOK Default, &Calc
+    Gui, Calc:Color, , 0xeeeeee
+    Gui, Calc:Add, Edit, x10 y80 w580 h390 vResultText Resize,
+    Gui, Calc:Show, w600 h480, 计算器
 	WinSet, Transparent, 240
 	return
-	
+
+#IfWinActive, 计算器 ahk_class AutoHotkeyGUI
+	^d::
+		GuiControl, Calc:Text, ResultText,
+		return
+#IfWinActive
+	CalcGuiSize:
+		GuiControl, Move, InputText, % "w" A_GuiWidth-120 " h30"
+		GuiControl, Move, CalcButton, % "X" A_GuiWidth-90 " h30"
+		GuiControl, Move, ResultText, % "w" A_GuiWidth-20 " h" A_GuiHeight-90
+		return
+
+	CalcGuiEscape:
+	CalcGuiClose:
+	CalcCancel:
+		Gui Destroy
+		return
+
 	CalcOK:
 		GuiControlGet, InputText, , InputText
 		if (InputText != "") return
@@ -191,7 +209,8 @@ goto End
 		}
 		GuiControl, , ResultText, % CurrentDateTime " " InputText " => " result "`r`n" CurrentText
 		return
-/*	
+
+/*
 	InputBox, express, 表达式计算, `n请输入表达式如数学公式,,400,150,,,,, %Clipboard%
 	try { 
 	Tempfile := A_Temp . "\mgu_temp.vbs"
@@ -554,11 +573,6 @@ MoveIt(Q)
 	return
 }
 
-GuiSize:
-    GuiControl, Move, InputText, % "w" A_GuiWidth-120 " h30"
-    GuiControl, Move, CalcButton, % "X" A_GuiWidth-90 " h30"
-    GuiControl, Move, ResultText, % "w" A_GuiWidth-20 " h" A_GuiHeight-90
-	return
 GuiEscape:
 GuiClose:
 Cancel:
@@ -622,6 +636,46 @@ GUID()
 	SendInput,^v
 	return
 
+GetDnsAddress()
+{
+    if (DllCall("iphlpapi.dll\GetNetworkParams", "ptr", 0, "uint*", size) = 111) && !(VarSetCapacity(buf, size, 0))
+        throw Exception("Memory allocation failed for FIXED_INFO struct", -1)
+    if (DllCall("iphlpapi.dll\GetNetworkParams", "ptr", &buf, "uint*", size) != 0)
+        throw Exception("GetNetworkParams failed with error: " A_LastError, -1)
+    addr := &buf, DNS_SERVERS := []
+    DNS_SERVERS[1] := StrGet(addr + 264 + (A_PtrSize * 2), "cp0")
+    ptr := NumGet(addr+0, 264 + A_PtrSize, "uptr")
+    while (ptr) {
+        DNS_SERVERS[A_Index + 1] := StrGet(ptr+0 + A_PtrSize, "cp0")
+        ptr := NumGet(ptr+0, "uptr")
+    }
+    ret := ""
+    for i, v in DNS_SERVERS {
+        ret := ret . "`t" . v . "`n"
+    }
+    return ret
+}
+
+GetMacAddress(delimiter := ":", case := False)
+{
+    if (DllCall("iphlpapi.dll\GetAdaptersInfo", "ptr", 0, "uint*", size) = 111) && !(VarSetCapacity(buf, size, 0))
+        throw Exception("Memory allocation failed for IP_ADAPTER_INFO struct", -1)
+    if (DllCall("iphlpapi.dll\GetAdaptersInfo", "ptr", &buf, "uint*", size) != 0)
+        throw Exception("GetAdaptersInfo failed with error: " A_LastError, -1)
+    addr := &buf, MAC_ADDRESS := []
+    while (addr) {
+        loop % NumGet(addr+0, 396 + A_PtrSize, "uint")
+            mac .= Format("{:02" (case ? "X" : "x") "}", NumGet(addr+0, 400 + A_PtrSize + A_Index - 1, "uchar")) "" delimiter ""
+        MAC_ADDRESS[A_Index] := SubStr(mac, 1, -1), mac := ""
+        addr := NumGet(addr+0, "uptr")
+    }
+	ret := ""
+	for i, v in MAC_ADDRESS {
+	    ret := ret . "`t" . v . "`n"
+	}
+	return ret
+}
+
 GetIPs() {
 	; 查询本机所有网络适配器的IP地址
 	wbemLocator := ComObjCreate("WbemScripting.SWbemLocator")
@@ -645,7 +699,7 @@ GetIPs() {
 		whr.Send()
 		extIP := StrReplace(whr.ResponseText, "来自于：", "`n`t")
 	}
-	ip := "外部地址: `n`t" . extIP . "`n" . "内部地址: `n" . ip
+	ip := "外部地址: `n`t" . extIP . "`n" . "内部地址: `n" . ip . "`nDNS 服务器:`n" . GetDnsAddress() . "`nMAC地址:`n" . GetMacAddress()
 	whr := ""
 	return ip
 }
