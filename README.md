@@ -31,7 +31,7 @@
 | Win + Y           | 鼠标右键点击                                                                             |Win + Ctrl + Alt + →| 窗口右下角分屏↘                       |
 | Win + ,           | 关闭显示器                                                                              |Win + Ctrl + ↑| 窗口上移↑                          |
 | Win + .           | 等价 Ctrl + 小键盘+，若在列表控件中，会自动调整列宽                                                     |Win + Ctrl + ↓| 窗口下移↓                          |
-| Win + /           | 运行[HxD十六进制编辑器](https://mh-nexus.de/en/hxd/)                                                                   |Win + Ctrl + ←| 窗口左移←                          |
+| Win + /           | 运行[HxD十六进制编辑器](https://mh-nexus.de/en/hxd/)                                        |Win + Ctrl + ←| 窗口左移←                          |
 | Win + ‘           | 运行WinScp，需要先安装                                                                     |Win + Ctrl + →| 窗口右移→                          |
 | Win + Z           | 运行[Process Explorer任务管理器](https://live.sysinternals.com/procexp.exe)               |Win + Ctrl + ]| 鼠标滚轮放大                         |
 | Ctrl + \          | 自动调整列宽                                                                             |Win + Ctrl + [| 鼠标滚轮缩小                         |
@@ -42,10 +42,12 @@
 | Ctrl + Win + 左键拖动 | 鼠标选择范围直接贴图                                                                         | Alt + Win + 鼠标拖动 | 截图后直接用Outlook打开发送邮件            |
 | Ctrl + Win + K    | 打开或关闭键盘鼠标操作的OSD显示，演示操作时很有用                                                         |  Ctrl + Win + A | 给应用程序添加别名，这样在开始菜单中输入别名可以快速启动程序 |
 | Ctrl + Win + D    | 任意编辑器中重复当前行                                                                        | Ctrl + Win + h | 运行 Hash 计算工具                   |
-| Win + Alt + V           | 打开系统环境变量编辑框                                                              | Win + \ | 等价小键盘 *，如果在树形目录中，会自动展开所有子节点    | 
+| Win + Alt + V           | 打开系统环境变量编辑框                                                                        | Win + \ | 等价小键盘 *，如果在树形目录中，会自动展开所有子节点    | 
 | Win + ;           | 打开 Windows Emoji 表情输入框                                                             | 连续按两次左 Ctrl | 鼠标聚焦                           |
 | 连续按两次 ESC         | 最小化当前窗口                                                                            | 连续按两次 Caps Lock | 等价 Page Up，适合笔记本，无需配合Fn键使用     |
 | 连续按两次 左Alt        | 等价于 Page Down                                                                      | Ctrl+Shift+C | 资源管理中按，会自动复制选择的文件路径到剪切板        |
 | F3                | Chrome/Edge中使用，会打开首页                                                               | Ctrl + PrintScreen | 打开 SnagIt，需要安装SnagIt           | 
 | Ctrl + \          | 等价Ctrl+NumPad+，适合笔记本，自动列宽                                                          | PrintScreen | 自动截图到剪切板并保存到用户图片目录\autocapture |
 | Win+PrintScreen | Win8以下则自动截图并打开画笔程序粘贴，Win8以上则自动截图保存到用户图片目录\屏幕截图下                                    |Win+左键拖动| 截图并贴图，复制到剪切板                   |
+|Ctrl + Win + W | 打开Window Spy，查看窗口信息                                                                | | |
+| Ctrl + Alt + 鼠标左键点击拖动 | 测量屏幕距离和角度（自动吸附）| Ctrl + Alt + 鼠标右键点击拖动 | 测量屏幕距离和角度 |

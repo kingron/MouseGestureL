@@ -3,6 +3,8 @@
 global ontop := true
 global cursorPID := 0
 global osdPID := 0
+global spyPID := 0
+
 RegRead DisabledHotkeys, HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced, DisabledHotkeys
 If (DisabledHotkeys = "") {
 	Run reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v DisabledHotkeys /d QWTUSFGHKCVM
@@ -63,7 +65,7 @@ goto End
 #k::Run "putty.exe" @k3
 #^k::
 	if (osdPID = 0) {
-		Run, KeypressOSD.ahk,,,osdPID
+		Run, %A_ScriptDir%\KeypressOSD.ahk,,,osdPID
 	} else {
 		Process, Close, %osdPID%
 		osdPID := 0
@@ -158,6 +160,14 @@ goto End
 	Return
 #!v::Run rundll32.exe sysdm.cpl`,EditEnvironmentVariables
 #w::WinClose,A
+#^w::
+	if (spyPID = 0) {
+		Run, %A_ScriptDir%\WindowSpy.ahk,,,spyPID
+	} else {
+		Process, Close, %spyPID%
+		spyPID := 0
+	}
+	return
 ; #x:: 移动中心
 #y:: MouseClick, right
 #z::Run procexp.exe
@@ -240,17 +250,8 @@ goto End
 #'::Run, "C:\Program Files (x86)\WinSCP\WinSCP.exe"
 ; Win+; = 表情输入框
 
-; Note: From now on whenever you run AutoHotkey directly, this script
-; will be loaded.  So feel free to customize it to suit your needs.
-
-; Please read the QUICK-START TUTORIAL near the top of the help file.
-; It explains how to perform common automation tasks such as sending
-; keystrokes and mouse clicks.  It also explains more about hotkeys.
-
 ;================ TransActive =====================
-; Author: Programus
-;
-; Set Current active window Transparent. 
+; Set Current active window Transparent.
 ; HotKey: 
 ;	 Win-Alt-0: Switch transparent
 ;	 Win-Alt-↓: less transparent
@@ -329,7 +330,7 @@ ExtractHtmlData() {
 ~LControl::
 	if (A_PriorHotkey == "~LControl" and A_TimeSincePriorHotkey < 200) {
 		if (cursorPID == 0) {
-			Run, cursorhighlight.ahk,,,cursorPID
+			Run, %A_ScriptDir%\cursorhighlight.ahk,,,cursorPID
 		} else {
 			Process, Close, %cursorPID%
 			cursorPID := 0
