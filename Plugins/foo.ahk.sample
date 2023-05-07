@@ -1,0 +1,124 @@
+﻿;===============================================================================
+;
+;		MouseGestureL.ahk - Plugin Sample Script
+;
+;	* Don't use "MG_" to public tokens like Labels and Functions and Globals,
+;	  it may conflict to the other tokens.
+;	  Use unique token like your name as the prefix.
+;
+;														Created by Pyonkichi
+;===============================================================================
+;-------------------------------------------------------------------------------
+; Initialize Language Strings
+;-------------------------------------------------------------------------------
+if (MG_Language = "Japanese")
+{
+	foo_LngMenu001		= プラグインフォルダを開く
+	foo_LngCondition001	= その他
+	foo_LngCondition002	= 色判定
+	foo_LngCondition003	= 色を取得したい場所を右クリック
+	foo_LngAction001	= デバッグ
+	foo_LngAction002	= スクリプトの実行履歴
+	foo_LngAction003	= 変数一覧
+	foo_LngAction004	= ホットキー一覧
+	foo_LngAction005	= キーボード、マウスの操作履歴
+	foo_LngAction006	= トレイアイコンのツールチップを表示
+	foo_LngAction007	= `n`t表示する文字列を入力してください。
+}
+;else if (MG_Language = "Other Language")
+;{
+;	...
+;}
+else ;if (MG_Language = "English")
+{
+	foo_LngMenu001		= Open Plugin Folder
+	foo_LngCondition001	= Others
+	foo_LngCondition002	= Color Discrimination
+	foo_LngCondition003	= Right-Click on Target Pixel
+	foo_LngAction001	= Debug
+	foo_LngAction002	= Lines most recently executed
+	foo_LngAction003	= Variables and their contents
+	foo_LngAction004	= Hotkeys and their methods
+	foo_LngAction005	= Key history and script info
+	foo_LngAction006	= Show TrayTip
+	foo_LngAction007	= `n`tInput Text to be Shown
+}
+;-------------------------------------------------------------------------------
+; Register Plugin Items
+;-------------------------------------------------------------------------------
+;...............................................................................
+; for Application
+if (!MG_IsEdit)
+{
+	; Regisger Plugin Menu
+	MG_AddPluginMenu(foo_LngMenu001, "foo_OpenPluginFolder")
+}
+;...............................................................................
+; for MG_Edit
+else
+{
+	; Regisger Custom Conditions
+	MG_AddConditionCategory("Others", foo_LngCondition001)
+	MG_AddCustomCondition("Others", foo_LngCondition002, "foo_GetPixelColor")
+	; Register Action Templates
+	MG_AddActionCategory("Debug", foo_LngAction001)
+	MG_AddActionTemplate("Debug", foo_LngAction002, "ListLines")
+	MG_AddActionTemplate("Debug", foo_LngAction003, "ListVars")
+	MG_AddActionTemplate("Debug", foo_LngAction004, "ListHotkeys")
+	MG_AddActionTemplate("Debug", foo_LngAction005, "KeyHistory")
+	MG_AddActionTemplate("Others", foo_LngAction006, "TrayTip,, %[" . foo_LngAction007 . "]%")
+}
+;...............................................................................
+; End of Initialization Process
+GoTo, foo_PluginEnd
+
+
+;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+;
+;	Subroutines and Functions
+;
+;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+;-------------------------------------------------------------------------------
+; [Plugin Menu Command]
+;	Open Plugin Folder
+;-------------------------------------------------------------------------------
+foo_OpenPluginFolder:
+	Run, %A_ScriptDir%\Plugins
+return
+
+;-------------------------------------------------------------------------------
+; [Custom Condition Command]
+;	Get Pixel Color
+;-------------------------------------------------------------------------------
+foo_GetPixelColor:
+	SetTimer, foo_PickerTimer, 10
+	Hotkey, RButton UP, foo_PickColor, On
+return
+
+foo_PickerTimer:
+	Tooltip, %foo_LngCondition003%
+return
+
+foo_PickColor:
+	MouseGetPos, fooX, fooY
+	SetTimer, foo_PickerTimer, Off
+	Hotkey, RButton UP, Off
+	Tooltip
+	PixelGetColor, fooColor, %fooX%, %fooY%, Alt RGB
+	MG_SetRuleValue("foo_CheckColor(" . fooColor . ")")
+return
+
+;-------------------------------------------------------------------------------
+; [Function for Custom Condition]
+;	Check a color under the cursor
+;	color1 : Color to be checked
+;-------------------------------------------------------------------------------
+foo_CheckColor(color1)
+{
+	global MG_X, MG_Y
+	PixelGetColor, color2, MG_X, MG_Y, Alt RGB
+	return (color1 = color2)
+}
+;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+foo_PluginEnd:
