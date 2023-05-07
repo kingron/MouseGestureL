@@ -50,13 +50,13 @@ goto End
 	return
 ; #e:: 资源管理器
 #f::Run hfs.exe
-#g::Run cmd /c gost -C gost.json
+#g::Run gost -C \Tools\gost.json
 #h:: 
 	Process, Exist, heidisql.exe
 	if (ErrorLevel == 0) {
 		Run HeidiSQL\heidisql.exe
 	}
-return
+	return
 #^h:: Run, HashCalc.ahk
 #i::Run "compmgmt.msc"
 #j::Run "C:\Program Files\Git\git-bash.exe"
