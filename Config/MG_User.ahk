@@ -800,4 +800,14 @@ IsWin8OrHigh() {
 	return
 #If
 
+#Include %A_ScriptDir%\ocr.ahk
+#^X::
+	hBitmap := HBitmapFromScreen(GetArea()*)
+	pIRandomAccessStream := HBitmapToRandomAccessStream(hBitmap)
+	DllCall("DeleteObject", "Ptr", hBitmap)
+	text := ocr(pIRandomAccessStream, "zh-Hans-CN")
+	ObjRelease(pIRandomAccessStream)
+	showMessage("识别结果", text)
+	Return
+
 End:
