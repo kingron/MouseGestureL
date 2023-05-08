@@ -5,6 +5,7 @@ global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
+; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
 RegRead DisabledHotkeys, HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced, DisabledHotkeys
 If (DisabledHotkeys = "") {
@@ -60,7 +61,42 @@ goto End
 		Run HeidiSQL\heidisql.exe
 	}
 	return
-#^h:: Run, HashCalc.ahk
+#^h:: Run, %A_ScriptDir%\HashCalc.ahk
+; HotString 管理
+#include %A_ScriptDir%\HotString.ahk
+#+h::
+	Gui, Add, Text, x10 y10 w300 h20, 请输入短语如 fyi，短语可用 tab 键触发替换
+	Gui, Add, Edit, x10 y30 w300 h20 vShortText,
+	Gui, Add, Text, x10 y60 w300 h20, 完整内容，例如 for your information
+	Gui, Add, Edit, x10 y80 w300 h20 vLongText,
+	Gui, Add, Button, x10 y110 w60 h30 gQuickText Default, 确定
+	Gui, Add, Button, x80 y110 w60 h30 gCancel, 取消
+	Gui, Show, w320 h150, 添加新短语(HotString.ahk)
+	return
+
+	QuickText:
+		Gui, Submit, NoHide
+		if ShortText =
+		{
+			MsgBox, 48, 错误, 请输入短语
+			Return
+		}
+		if LongText =
+		{
+			MsgBox, 48, 错误, 请输入被替换的完整内容
+			Return
+		}
+
+        filename := A_ScriptDir . "\HotString.ahk"
+        line := Format(":COT:{}::{}", ShortText, LongText)
+		if InFile(filename, line) {
+		    MsgBox 48, 错误, 短语定义已经存在
+		    return
+		}
+		FileAppend,`r`n%line%, % filename, UTF-8
+		Gui, Destroy
+		Reload
+	    return
 #i::Run compmgmt.msc
 #j::Run "C:\Program Files\Git\git-bash.exe"
 #k::Run "putty.exe" @k3
@@ -264,6 +300,25 @@ Exec(command) {
 	return exec.StdOut.ReadAll() . right(err, ": ")
 }
 
+InFile(filename, string)
+{
+    FileOpen := FileOpen(filename, "r") ; 打开文件以供读取
+
+    while !FileOpen.AtEOF() ; 当文件未到达末尾时
+    {
+        line := StrReplace(FileOpen.ReadLine(), "`r`n") ; 逐行读取文件内容
+        line := trim(line)
+        if (line = string) ; 判断当前行是否等于指定字符串
+        {
+            FileOpen.Close() ; 关闭文件
+            return true ; 匹配到指定字符串，返回 true
+        }
+    }
+
+    FileOpen.Close() ; 关闭文件
+    return false ; 未匹配到指定字符串，返回 false
+}
+
 right(Str, Separator) {
 	pos := InStr(Str, Separator)
 	if (pos > 0) {
@@ -307,27 +362,33 @@ ExtractHtmlData() {
 
 ; 连续两次按左 Ctrl
 ~LControl::
-	if (A_PriorHotkey == "~LControl" and A_TimeSincePriorHotkey < 200) {
+    if (A_PriorHotkey == "~LControl" and A_TimeSincePriorHotkey < 200) {
+    }
+	return
+
+; 连续两次按 ESC 最小化当前窗口
+~Esc::
+	if (A_PriorHotkey = "~Esc" and A_TimeSincePriorHotkey < 200) {
+	    WinSet, Bottom,, A
+	}
+	return
+
+CapsLock & d::
+	Send {Home}
+	Send +{End}
+	Send {Del}
+	Send {Del}
+    Return
+
+^CapsLock::
+;	if (A_PriorHotkey == "CapsLock" and A_TimeSincePriorHotkey < 200) {
 		if (cursorPID == 0) {
 			Run, %A_ScriptDir%\cursorhighlight.ahk,,,cursorPID
 		} else {
 			Process, Close, %cursorPID%
 			cursorPID := 0
 		}
-	}
-	return
-
-; 连续两次按 ESC 最小化当前窗口
-~Esc::
-	if (A_PriorHotkey = "~Esc" and A_TimeSincePriorHotkey < 200) {
-		WinMinimize, A
-	}
-	return
-
-~CapsLock::
-	if (A_PriorHotkey = "~CapsLock" and A_TimeSincePriorHotkey < 200) {
-		SendInput, {PgUp}
-	}
+;	}
 	return
 
 ~LAlt::
@@ -777,7 +838,7 @@ IsWin8OrHigh() {
 #If
 
 #Include %A_ScriptDir%\ocr.ahk
-#^X::
+#^x::
 	hBitmap := HBitmapFromScreen(GetArea()*)
 	pIRandomAccessStream := HBitmapToRandomAccessStream(hBitmap)
 	DllCall("DeleteObject", "Ptr", hBitmap)
