@@ -4,6 +4,7 @@ global ontop := true
 global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
+; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 
 RegRead DisabledHotkeys, HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced, DisabledHotkeys
 If (DisabledHotkeys = "") {
@@ -41,7 +42,7 @@ goto End
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
-#c::Run "cmd.exe"
+#c::Run cmd.exe
 ; #d:: 最小化桌面
 ; Ctrl+Win+D，重复当前行
 #^d::
@@ -60,7 +61,7 @@ goto End
 	}
 	return
 #^h:: Run, HashCalc.ahk
-#i::Run "compmgmt.msc"
+#i::Run compmgmt.msc
 #j::Run "C:\Program Files\Git\git-bash.exe"
 #k::Run "putty.exe" @k3
 #^k::
@@ -74,6 +75,7 @@ goto End
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
 #m::Run "SumatraPDF-3.4.6-64.exe"
+#^m::Run wmplayer.exe /playlist:music
 #n::Run Notepad++
 #o::Run wifi.bat
 ; #p:: 显示器
@@ -96,13 +98,11 @@ goto End
 	return
 #+q::
 	def := Clipboard
-	InputBox, word, 单词, `n请输入要翻译的单词,,300,146,,,,,%def%
+	InputBox, word, 单词, `n使用百度进行翻译。`n请输入要翻译的内容，可以是句子或者单词,,400,180,,,,,%def%
 	if ErrorLevel
 		return
 
 	Run, https://fanyi.baidu.com/#en/zh/%word%
-; Run, "C:\Windows\System32\WScript.exe" "D:\tools\gt.js" "%word%"
-
 ;  shell := ComObjCreate("WScript.Shell")
 ;  exec := shell.Exec("CScript.exe //Nologo D:\tools\gt.js """ . word . """")
 ;  text := exec.StdOut.ReadAll()
@@ -128,7 +128,7 @@ goto End
 				WinActivate,% "ahk_id" vWinList%A_Index%
 				first := false
 			} 
-			WinSet, TopMost,, % "ahk_id" vWinList%A_Index%
+			WinSet, AlwaysOnTop, On, % "ahk_id" vWinList%A_Index%
 		} else {
 			WinSet, Bottom,, % "ahk_id" vWinList%A_Index%
 		}
@@ -219,34 +219,13 @@ goto End
 		}
 		GuiControl, , ResultText, % CurrentDateTime " " InputText " => " result "`r`n" CurrentText
 		return
-
-/*
-	InputBox, express, 表达式计算, `n请输入表达式如数学公式,,400,150,,,,, %Clipboard%
-	try { 
-	Tempfile := A_Temp . "\mgu_temp.vbs"
-		s := Format("WScript.echo Eval(""{}"")", express)
-		FileAppend % s, % Tempfile
-		cmd := "cscript //nologo " Tempfile
-		result := Exec(cmd)
-		FileDelete, %Tempfile%
-
-		#Include %A_ScriptDir%\ActiveScript.ahk
-		vb := new ActiveScript("VBScript")
-		result := express . " =>`n" . vb.Eval(express)
-	} catch e {
-		result := % "错误: " e.Message "`n行: " e.Line 
-	}
-	showMessage("结果", result)
-	return
-*/
 #`::WinMinimize,A
 ; 等价于按数字小键盘 *
 #\::SendInput, {NumpadMult}
 ; 关闭显示器
 #,::SendMessage, 0x112, 0xF170, 2,, Program Manager  ; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER
-; 重启XPS 13z的蓝牙设备，其中的 *PID_3004* 为蓝牙硬件的ID参数
-#.::SendInput, ^{NumpadAdd}
-#/::Run "HxD.exe"
+#.::Run ScreenRuler\screenruler.exe
+#/::Run HxD.exe
 #'::Run, "C:\Program Files (x86)\WinSCP\WinSCP.exe"
 ; Win+; = 表情输入框
 
@@ -471,10 +450,7 @@ ExtractHtmlData() {
 
 ; 给QQ增加查找联系人的快捷键 Ctrl + F
 #IfWinActive ahk_class TXGuiFoundation
-^f::
-	; 20，115
-	Click 120, 115 
-	return
+^f::Click 120, 115
 #IfWinActive
 
 ; 资源管理器中，按 Ctrl+Shift+C，复制文件名
