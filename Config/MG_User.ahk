@@ -63,7 +63,7 @@ goto End
 	return
 #^h:: Run, %A_ScriptDir%\HashCalc.ahk
 ; HotString 管理
-#include %A_ScriptDir%\HotString.ahk
+#include *i %A_ScriptDir%\HotString.ahk
 #+h::
 	Gui, Add, Text, x10 y10 w300 h20, 请输入短语如 fyi，短语可用 tab 键触发替换
 	Gui, Add, Edit, x10 y30 w300 h20 vShortText,
@@ -302,6 +302,9 @@ Exec(command) {
 
 InFile(filename, string)
 {
+	if !FileExist(filename) {
+		return false
+	}
     FileOpen := FileOpen(filename, "r") ; 打开文件以供读取
 
     while !FileOpen.AtEOF() ; 当文件未到达末尾时
