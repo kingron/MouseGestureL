@@ -746,11 +746,22 @@ GetIPs() {
 }
 
 showMessage(title, text) {
-	Gui +LastFound +ToolWindow +AlwaysOnTop
+	Global MyBox
+	Gui Msg:New, +LastFound +ToolWindow +AlwaysOnTop +Resize +MinSize200x150
 	WinSet, Transparent, 240
-	Gui, Font, s18
-	Gui, Add, Edit, x10 y10 w680 h380, %text%
-	Gui, Show, w700 h400, %title%
+	Gui, Msg:Font, s18
+	Gui, Msg:Add, Edit, x10 y10 w680 h380 vMyBox Resize, %text%
+	Gui, Msg:Show, w700 h400, %title%
+	return
+
+	MsgGuiSize:
+		GuiControl, Move, MyBox, % "w" A_GuiWidth-20 " h" A_GuiHeight-20
+		return
+	MsgGuiEscape:
+	MsgGuiClose:
+	MsgGuiCancel:
+		Gui,Msg:Destroy
+		return
 }
 
 #+i:: showMessage("结果(按ESC关闭)", GetIPs())
