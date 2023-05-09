@@ -14,6 +14,47 @@ If (DisabledHotkeys = "") {
 }
 goto End
 
+; Hot Run 管理
+#Include *i %A_ScriptDir%\HotRun.ahk
+#^+a::
+	Gui, Add, Text, x10 y10 w300 h20, 请输入快捷键，打勾表示支持Win 键
+	Gui, Add, HotKey, x10 y30 w200 h20 vMyHotkey,
+	Gui, Add, CheckBox, x220 y30 w90 h20 vCheckboxWin, Win 键
+	Gui, Add, Text, x10 y60 w300 h20, 运行指令，例如 URL，程序完整路径等
+	Gui, Add, Edit, x10 y80 w300 h20 vMyCmd,
+	Gui, Add, Button, x10 y110 w60 h30 gHotRunOK Default, 确定
+	Gui, Add, Button, x80 y110 w60 h30 gCancel, 取消
+	Gui, Show, w320 h150, 新快捷运行(HotRun.ahk)
+	return
+
+	HotRunOK:
+		Gui, Submit, NoHide
+		if MyHotkey =
+		{
+			MsgBox, 48, 错误, 请添加快捷键
+			Return
+		}
+		if MyCmd =
+		{
+			MsgBox, 48, 错误, 请输入运行目标，例如 URL 或者程序完整路径
+			Return
+		}
+
+        filename := A_ScriptDir . "\HotRun.ahk"
+        if CheckboxWin {
+            line := Format("#{}::Run,{}", MyHotkey, MyCmd)
+        } else {
+            line := Format("{}::Run,{}", MyHotkey, MyCmd)
+        }
+		if InFile(filename, line) {
+		    MsgBox 48, 错误, 热键运行定义已经存在
+		    return
+		}
+		FileAppend,`r`n%line%, % filename, UTF-8
+		Gui, Destroy
+		Reload
+	    return
+
 ; 给Windows开始菜单添加程序别名
 ^#a::
 	Gui, Add, Text, x10 y5 w200 h20, 请输入别名，例如 xyz
@@ -363,11 +404,11 @@ ExtractHtmlData() {
 	return html
 }
 
-; 连续两次按左 Ctrl
-~LControl::
-    if (A_PriorHotkey == "~LControl" and A_TimeSincePriorHotkey < 200) {
-    }
-	return
+;; 连续两次按左 Ctrl，当前会导致长按有问题，先去掉
+;~LControl::
+;    if (A_PriorHotkey == "~LControl" and A_TimeSincePriorHotkey < 200) {
+;    }
+;	return
 
 ; 连续两次按 ESC 最小化当前窗口
 ~Esc::
@@ -394,11 +435,12 @@ CapsLock & d::
 ;	}
 	return
 
-~LAlt::
-	if (A_PriorHotkey = "~LAlt" and A_TimeSincePriorHotkey < 200) {
-		SendInput, {PgDn}
-	}
-	return
+; 下面会导致长按 Alt 有问题，暂时去掉
+;~LAlt::
+;	if (A_PriorHotkey = "~LAlt" and A_TimeSincePriorHotkey < 200) {
+;		SendInput, {PgDn}
+;	}
+;	return
 
 ; Win = #	Ctrl = ^	Alt = !	Shift = +	 
 
@@ -814,7 +856,12 @@ PrintScreen::
 	
 	pToken := Gdip_Startup()
 	hWnd := WinExist("A")
-	pBitmap := Gdip_BitmapFromHWND(hWnd)
+	; 下面方式不能抓取 Overlayer Window
+	; pBitmap := Gdip_BitmapFromHWND(hWnd)
+	WinGetPos, x, y, w, h, A
+	hBitmap := HBitmapFromScreen(x, y, w, h)
+	pBitmap := Gdip_CreateBitmapFromHBITMAP(hBitmap)
+	DeleteObject(hBitmap)
 	Gdip_SetBitmapToClipboard(pBitmap)
 	Gdip_SaveBitmapToFile(pBitmap, file)
 	Gdip_DisposeImage(pBitmap)
@@ -851,7 +898,7 @@ IsWin8OrHigh() {
 	return
 #If
 
-#Include %A_ScriptDir%\ocr.ahk
+#Include *i %A_ScriptDir%\ocr.ahk
 #^x::
 	hBitmap := HBitmapFromScreen(GetArea()*)
 	pIRandomAccessStream := HBitmapToRandomAccessStream(hBitmap)
