@@ -104,6 +104,7 @@ goto End
 	return
 #^h:: Run, %A_ScriptDir%\HashCalc.ahk
 ; HotString 管理
+#Hotstring EndChars `t
 #include *i %A_ScriptDir%\HotString.ahk
 #+h::
 	Gui, Add, Text, x10 y10 w300 h20, 请输入短语如 fyi，短语可用 tab 键触发替换
@@ -907,5 +908,17 @@ IsWin8OrHigh() {
 	ObjRelease(pIRandomAccessStream)
 	showMessage("识别结果", text)
 	Return
+
+; Ctrl, Alt 键在远程桌面失效，可以在本地和远程都安装AHK，然后分别写如下代码来避免，原理是利用App键中转绕过去
+#IfWinActive, ahk_exe mstsc.exe|dsTermServ.exe
+; 本地，客户端
+*^AppsKey::^LAlt
+
+; 远程server 端
+; *^LAlt::^AppsKey
+#IfWinActive
+
+CapsLock & r:: Send {Media_Prev}
+CapsLock & f:: Send {Media_Next}
 
 End:
