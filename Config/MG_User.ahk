@@ -953,7 +953,10 @@ IsWin8OrHigh() {
 ; *^LAlt::^AppsKey
 #IfWinActive
 
-CapsLock & r:: Send {Media_Prev}
-CapsLock & f:: Send {Media_Next}
+CapsLock & r:: SendInput {Media_Prev}
+CapsLock & f:: SendInput {Media_Next}
+CapsLock & e:: SendInput {Launch_Media}
+CapsLock & t:: SendInput {Launch_Mail}
+CapsLock & g:: Run, Calc
 
 End:
