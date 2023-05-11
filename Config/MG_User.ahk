@@ -17,15 +17,37 @@ goto End
 ; Hot Run 管理
 #Include *i %A_ScriptDir%\HotRun.ahk
 #^+a::
-	Gui, Add, Text, x10 y10 w300 h20, 请输入快捷键，打勾表示支持Win 键
-	Gui, Add, HotKey, x10 y30 w200 h20 vMyHotkey,
-	Gui, Add, CheckBox, x220 y30 w90 h20 vCheckboxWin, Win 键
-	Gui, Add, Text, x10 y60 w300 h20, 运行指令，例如 URL，程序完整路径等
-	Gui, Add, Edit, x10 y80 w300 h20 vMyCmd,
-	Gui, Add, Button, x10 y110 w60 h30 gHotRunOK Default, 确定
-	Gui, Add, Button, x80 y110 w60 h30 gCancel, 取消
-	Gui, Show, w320 h150, 新快捷运行(HotRun.ahk)
+	Gui, HotRun:New, +LastFound +Resize +MinSize320x550
+	Gui, HotRun:Add, Text, x10 y10 w300 h20 +Resize, 请输入快捷键，打勾表示支持Win 键
+	Gui, HotRun:Add, HotKey, x10 y30 w300 h20 vMyHotkey,
+	Gui, HotRun:Add, CheckBox, x320 y30 w90 h20 vCheckboxWin, Win 键
+	Gui, HotRun:Add, Text, x10 y60 w400 h20, 运行指令，例如 URL，程序完整路径等
+	Gui, HotRun:Add, Edit, x10 y80 w400 h20 vMyCmd,
+	Gui, HotRun:Add, Button, x10 y110 w60 h30 gHotRunOK Default, 确定
+	Gui, HotRun:Add, Button, x80 y110 w60 h30 gCancel, 取消
+
+	filename := A_ScriptDir . "\HotRun.ahk"
+	lines := ""
+	if FileExist(filename) {
+		FileRead, lines, % filename
+		lines := StrReplace(lines, "`r`n", "|")
+	}
+	Gui, HotRun:Add, ListBox, x10 y150 w400 h390 vHotRunList readonly, % lines
+	Gui, HotRun:Show, w420 h550, 新快捷运行(HotRun.ahk)
 	return
+
+	HotRunGuiSize:
+		GuiControl, Move, MyHotKey, % "w" A_GuiWidth-120
+		GuiControl, Move, CheckboxWin, % "x" A_GuiWidth-100
+		GuiControl, Move, MyCmd, % "w" A_GuiWidth-20
+		GuiControl, Move, HotRunList, % "w" A_GuiWidth-20 " h" A_GuiHeight-130
+		return
+
+	HotRunGuiEscape:
+	HotRunGuiCancel:
+	HotRunGuiClose:
+		Gui, Destroy
+		return
 
 	HotRunOK:
 		Gui, Submit, NoHide
@@ -107,15 +129,28 @@ goto End
 #Hotstring EndChars `t
 #include *i %A_ScriptDir%\HotString.ahk
 #+h::
-	Gui, Add, Text, x10 y10 w300 h20, 请输入短语如 fyi，短语可用 tab 键触发替换
-	Gui, Add, Edit, x10 y30 w300 h20 vShortText,
-	Gui, Add, Text, x10 y60 w300 h20, 完整内容，例如 for your information
-	Gui, Add, Edit, x10 y80 w300 h20 vLongText,
-	Gui, Add, Button, x10 y110 w60 h30 gQuickText Default, 确定
-	Gui, Add, Button, x80 y110 w60 h30 gCancel, 取消
-	Gui, Show, w320 h150, 添加新短语(HotString.ahk)
+	Gui, HotStr:Add, Text, x10 y10 w400 h20, 请输入短语如 fyi，短语可用 tab 键触发替换
+	Gui, HotStr:Add, Edit, x10 y30 w400 h20 vShortText,
+	Gui, HotStr:Add, Text, x10 y60 w400 h20, 完整内容，例如 for your information
+	Gui, HotStr:Add, Edit, x10 y80 w400 h20 vLongText,
+	Gui, HotStr:Add, Button, x10 y110 w60 h30 gQuickText Default, 确定
+	Gui, HotStr:Add, Button, x80 y110 w60 h30 gCancel, 取消
+
+	filename := A_ScriptDir . "\HotString.ahk"
+	lines := ""
+	if FileExist(filename) {
+		FileRead, lines, % filename
+		lines := StrReplace(lines, "`r`n", "|")
+	}
+	Gui, HotStr:Add, ListBox, x10 y150 w400 h390 vHotStrList, % lines
+	Gui, HotStr:Show, w420 h550, 添加新短语(HotString.ahk)
 	return
 
+	HotStrGuiEscape:
+	HotStrGuiCancel:
+	HotStrGuiClose:
+		Gui, Destroy
+		return
 	QuickText:
 		Gui, Submit, NoHide
 		if ShortText =
