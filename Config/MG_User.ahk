@@ -959,4 +959,20 @@ CapsLock & e:: SendInput {Launch_Media}
 CapsLock & t:: SendInput {Launch_Mail}
 CapsLock & g:: Run, Calc
 
+#IfWinActive, ahk_class Chrome_WidgetWin_1
+Capslock & c::
+    Send, !d ; 切换到地址栏
+    Sleep, 100
+    Send, ^c ; 复制地址
+    Sleep, 100
+    decodedURL := UriDecode(Clipboard)
+    Clipboard := decodedURL ; 将解码后的地址复制到剪贴板
+    Return
+#IfWinActive
+
+UriDecode(Uri)
+{
+	oSC := new ActiveScript("JScript")
+	return oSC.decodeURIComponent(Uri)
+}
 End:
