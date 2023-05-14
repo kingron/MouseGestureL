@@ -54,3 +54,4 @@
 | Ctrl + Win + X        | 对屏幕进行截图并光学识别，仅Win10及以上，需要到系统设置，时间和语言，语言，添加语言，添加相应的体验包之后才可以支持OCR识别                  | Win + Shift + H       | 快捷短语设置，设置后会自动重启脚本                                                          |
 | CapsLock + D          | 删除行功能                                                                              | CapsLock + G          | 运行系统自带计算器                                                                  |
 | CapsLock + R          | 播放上一首歌曲                                                                            | CapsLock + F          | 播放下一首歌曲                                                                    |
+| CapsLock + C          | 复制浏览器地址并解码URL                                                                      |           |                                                                    |

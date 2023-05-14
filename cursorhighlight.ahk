@@ -1607,7 +1607,9 @@ Create_Focus:
 Gui, Focus: Margin , 0, 0
 Gui, Focus: -Caption +AlwaysOnTop +E0x20 +LastFound +ToolWindow
 Gui, Focus: Color, %General_Color_Cursor_Focus%
-Gui, Focus: Show, Maximize, Mouse Spotlight
+SysGet, VirtualWidth, 78
+SysGet, VirtualHeight, 79
+Gui, Focus: Show, x0 y0 w%VirtualWidth% h%VirtualHeight%, Mouse Spotlight
 WinGetPos, , , w, h, Mouse Spotlight ahk_class AutoHotkeyGUI
 WinGet, ID, ID, Mouse Spotlight ahk_class AutoHotkeyGUI
 WinSet, Transparent, %General_Cursor_Opacity_Focus%, Mouse Spotlight
