@@ -40,7 +40,7 @@ goto End
 		GuiControl, Move, MyHotKey, % "w" A_GuiWidth-120
 		GuiControl, Move, CheckboxWin, % "x" A_GuiWidth-100
 		GuiControl, Move, MyCmd, % "w" A_GuiWidth-20
-		GuiControl, Move, HotRunList, % "w" A_GuiWidth-20 " h" A_GuiHeight-130
+		GuiControl, Move, HotRunList, % "w" A_GuiWidth-20 " h" A_GuiHeight-160
 		return
 
 	HotRunGuiEscape:
