@@ -957,7 +957,8 @@ CapsLock & r:: SendInput {Media_Prev}
 CapsLock & f:: SendInput {Media_Next}
 CapsLock & e:: SendInput {Launch_Media}
 CapsLock & t:: SendInput {Launch_Mail}
-CapsLock & g:: Run, Calc
+CapsLock & c:: Run, Calc
+CapsLock & n:: Run, Notepad
 
 #IfWinActive, ahk_class Chrome_WidgetWin_1
 Capslock & c::
