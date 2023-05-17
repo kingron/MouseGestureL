@@ -906,7 +906,7 @@ PrintScreen::
 	OSD("截图保存到文件`n" . file)
 	return
 
-#If MouseIsOver("ahk_class Shell_TrayWnd")
+#If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 WheelUp::Send {Volume_Up}
 WheelDown::Send {Volume_Down}
 
