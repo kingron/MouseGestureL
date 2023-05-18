@@ -978,4 +978,71 @@ UriDecode(Uri)
 	oSC := new ActiveScript("JScript")
 	return oSC.decodeURIComponent(Uri)
 }
+
+; 设置快捷键为 Caps Lock + a
+CapsLock & a::
+	Gui, Asc:New, +LastFound +Resize +MinSize640x480
+	Gui, Asc:Add, Picture, x0 y0 w600 h500 0xE vMyPicture
+    Gui, Asc:Show, w1600 h900, ASCII 码表
+    Gui, Asc:Show, Maximize, ASCII 码表
+	GuiControlGet, hwnd, hwnd, MyPicture
+    WinGetPos, x, y, w, h, ahk_id %hwnd%
+	drawAscii(hwnd, w, h)
+    return
+
+	AscGuiSize:
+		GuiControl, Move, MyPicture, % "x0 y0 w" A_GuiWidth " h" A_GuiHeight
+		GuiControlGet, hwnd, hwnd, MyPicture
+	    drawAscii(hwnd, A_GuiWidth, A_GuiHeight)
+		return
+
+	AscGuiEscape:
+	AscGuiClose:
+	AscGuiCancel:
+		Gui, Destroy
+		return
+
+drawAscii(hWnd, w, h) {
+	pToken := Gdip_Startup()
+    pBitmap := Gdip_CreateBitmap(w, h)
+    graphics := Gdip_GraphicsFromImage(pBitmap)
+    pPen := Gdip_CreatePen(0xff000000, 2)
+	Gdip_DrawRectangle(graphics, pPen, 10, 10, w - 20, h - 20)
+	Gdip_DrawLine(graphics, pPen, 10, 40, w - 10, 40)
+
+    pBrush := Gdip_BrushCreateSolid(0xffcccccc)
+	Gdip_FillRectangle(graphics, pBrush, 11, 11, w - 22, 29)
+
+	pPen := Gdip_CreatePen(0xff000000, 1)
+	Gdip_TextToGraphics(graphics, "字符", "x20 y15 center vcenter s14", "微软雅黑")
+	Gdip_TextToGraphics(graphics, "DEC", "x80 y15 center vcenter s14", "微软雅黑")
+	Gdip_TextToGraphics(graphics, "HEX", "x140 y15 center vcenter s14", "微软雅黑")
+	Gdip_TextToGraphics(graphics, "OCT", "x200 y15 center vcenter s14", "微软雅黑")
+	size := (h - 54) / 64
+	loop, 64 {
+		if (mod(A_Index, 2) = 0) {
+			Gdip_FillRectangle(graphics, pBrush, 11, (A_Index - 1) * size + 43 , w - 22, size)
+		}
+		pos := "x20 y" (A_Index - 1) * size + 41 " center vcenter s" size
+		Gdip_TextToGraphics(graphics, chr(A_Index - 1), pos, "Consolas")
+
+		pos := "x80 y" (A_Index - 1) * size + 41 " center vcenter s" size
+		Gdip_TextToGraphics(graphics, Format("{1:02d}", A_Index - 1), pos, "Consolas")
+
+		pos := "x140 y" (A_Index - 1) * size + 41 " center vcenter s" size
+		Gdip_TextToGraphics(graphics, Format("{1:02X}", A_Index - 1), pos, "Consolas")
+
+		pos := "x200 y" (A_Index - 1) * size + 41 " center vcenter s" size
+		Gdip_TextToGraphics(graphics, Format("{1:03o}", A_Index - 1), pos, "Consolas")
+	}
+
+	Gdip_DrawLine(graphics, pPen, (w - 20)/4, 10, (w - 20)/4, h - 10)
+	Gdip_DrawLine(graphics, pPen, (w - 20)/2, 10, (w - 20)/2, h - 10)
+	Gdip_DrawLine(graphics, pPen, w - (w - 20)/4, 10, w - (w - 20)/4, h - 10)
+
+    hBitmap := Gdip_CreateHBITMAPFromBitmap(pBitmap)
+	SetImage(hWnd, hBitmap)
+	Gdip_DeleteGraphics(graphics), Gdip_DisposeImage(pBitmap), DeleteObject(hBitmap)
+	Gdip_Shutdown("pToken")
+}
 End:
