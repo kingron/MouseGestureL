@@ -953,6 +953,8 @@ IsWin8OrHigh() {
 ; *^LAlt::^AppsKey
 #IfWinActive
 
+CapsLock & q:: SendInput {Volume_Mute}
+CapsLock & w:: SendInput {Media_Play_Pause}
 CapsLock & r:: SendInput {Media_Prev}
 CapsLock & f:: SendInput {Media_Next}
 CapsLock & e:: SendInput {Launch_Media}
