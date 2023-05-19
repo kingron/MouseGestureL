@@ -1052,6 +1052,7 @@ drawAscii(hWnd, w, h) {
         CreateRectF(RC, (A_Index - 1) * CW + 80, 15, 80, 15), Gdip_DrawString(graphics, "DEC", hFontCn, hFormat, pBrushText, RC)
         CreateRectF(RC, (A_Index - 1) * CW + 140, 15, 80, 15), Gdip_DrawString(graphics, "HEX", hFontCn, hFormat, pBrushText, RC)
         CreateRectF(RC, (A_Index - 1) * CW + 200, 15, 80, 15), Gdip_DrawString(graphics, "OCT", hFontCn, hFormat, pBrushText, RC)
+        CreateRectF(RC, (A_Index - 1) * CW + 260, 15, 80, 15), Gdip_DrawString(graphics, "Unicode", hFontCn, hFormat, pBrushText, RC)
     }
 
     cp437_1 := ["␀", "␁", "␂", "␃", "␄", "␅", "␆", "␇", "␈", "␉", "␊", "␋", "␌", "␍", "␎", "␏"
@@ -1079,28 +1080,36 @@ drawAscii(hWnd, w, h) {
 		}
 
 		; 第一列
-        CreateRectF(RC, 20, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_1[A_Index] : chr(i), hFont, hFormat, pBrushText, RC)
+		ch := CP437 ? cp437_1[A_Index] : chr(i)
+        CreateRectF(RC, 20, i * size + 40, 80, size), Gdip_DrawString(graphics, ch, hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 80, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", i), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 140, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", i), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 200, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 260, i * size + 40, 80, size), Gdip_DrawString(graphics, Asc(ch), hFont, hFormat, pBrushText, RC)
 
 		; 第二列
-        CreateRectF(RC, 20 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_2[A_Index] : chr(64 + i), hFont, hFormat, pBrushText, RC)
+		ch := CP437 ? cp437_2[A_Index] : chr(64 + i)
+        CreateRectF(RC, 20 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, ch, hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 80 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 140 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 200 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 260 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Asc(ch), hFont, hFormat, pBrushText, RC)
 
 		; 第三列
-        CreateRectF(RC, 20 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_3[A_Index] : chr(128 + i), hFont, hFormat, pBrushText, RC)
+		ch := CP437 ? cp437_3[A_Index] : chr(128 + i)
+        CreateRectF(RC, 20 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, ch, hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 80 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 140 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 200 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 260 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Asc(ch), hFont, hFormat, pBrushText, RC)
 
 		; 第四列
-        CreateRectF(RC, 20 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_4[A_Index] : chr(192 + i), hFont, hFormat, pBrushText, RC)
+		ch := CP437 ? cp437_4[A_Index] : chr(192 + i)
+        CreateRectF(RC, 20 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, ch, hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 80 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 140 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
         CreateRectF(RC, 200 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 260 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Asc(ch), hFont, hFormat, pBrushText, RC)
 	}
 
 	Gdip_DrawLine(graphics, pPen, 10 + CW, 10, 10 + CW, h - 10)
