@@ -4,6 +4,7 @@ global ontop := true
 global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
+global CP437 := true
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 ; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
@@ -979,21 +980,31 @@ UriDecode(Uri)
 	return oSC.decodeURIComponent(Uri)
 }
 
-; 设置快捷键为 Caps Lock + a
+; Retrieve the width (w) and height (h) of the client area.
+GetClientSize(hwnd, ByRef w, ByRef h)
+{
+    VarSetCapacity(rc, 16)
+    DllCall("GetClientRect", "uint", hwnd, "uint", &rc)
+    w := NumGet(rc, 8, "int")
+    h := NumGet(rc, 12, "int")
+}
+
+; 设置快捷键为 Caps Lock + a, 显示 ASCII 码表，支持系统默认代码页和 Code Page 437 切换
 CapsLock & a::
+	global MyPicture, AscTitle, AscPicture
+	AscTitle := CP437 ? "ASCII 码表 - 代码页 437" : "ASCII 码表 - 系统默认代码页"
 	Gui, Asc:New, +LastFound +Resize +MinSize1080x820
-	Gui, Asc:Add, Picture, x0 y0 w600 h500 0xE vMyPicture
-    Gui, Asc:Show, w1920 h1010, ASCII 码表
-	GuiControlGet, hwnd, hwnd, MyPicture
-    WinGetPos, x, y, w, h, ahk_id %hwnd%
-    OutputDebug ==========
-	drawAscii(hwnd, w, h)
+    Gui, Asc:Show, w1080 h820 Maximize, %AscTitle%
+    hwnd := WinExist()
+	GetClientSize(hwnd, w, h)
+	Gui, Asc:Add, Picture, x0 y0 w%w% h%h% 0xE vMyPicture +HwndAscPicture
+	drawAscii(AscPicture, w, h)
+	OnMessage(0x0203, "DoubleClickHandler")
     return
 
 	AscGuiSize:
 		GuiControl, Move, MyPicture, % "x0 y0 w" A_GuiWidth " h" A_GuiHeight
-		GuiControlGet, hwnd, hwnd, MyPicture
-	    drawAscii(hwnd, A_GuiWidth, A_GuiHeight)
+	    drawAscii(AscPicture, A_GuiWidth, A_GuiHeight)
 		return
 
 	AscGuiEscape:
@@ -1001,6 +1012,19 @@ CapsLock & a::
 	AscGuiCancel:
 		Gui, Destroy
 		return
+
+DoubleClickHandler(wParam, lParam, msg, hwnd) {
+	asc := WinExist("ASCII 码表")
+	if (asc != hwnd) {
+		return
+	}
+
+	CP437 := !CP437
+	AscTitle := CP437 ? "ASCII 码表 - 代码页 437" : "ASCII 码表 - 系统默认代码页"
+	WinSetTitle, %AscTitle%
+    WinGetPos, x, y, w, h, ahk_id %AscPicture%
+	drawAscii(AscPicture, w, h)
+}
 
 drawAscii(hWnd, w, h) {
 	pToken := Gdip_Startup()
@@ -1034,10 +1058,9 @@ drawAscii(hWnd, w, h) {
             , "␐", "␑", "␒", "␓", "␔", "␕", "␖", "␗", "␘", "␙", "␚", "␛", "␜", "␝", "␞", "␟"
             , "␠", "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/"
             , "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":", ";", "<", "=", ">", "?"]
-
     cp437_2 := ["@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"
             , "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "[", "\", "]", "^", "_"
-            , "`", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"
+            , "``", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"
             , "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "{", "|", "}", "~", "␡"]
     cp437_3 := ["Ç", "ü", "é", "â", "ä", "à", "å", "ç", "ê", "ë", "è", "ï", "î", "ì", "Ä", "Å"
             , "É", "æ", "Æ", "ô", "ö", "ò", "û", "ù", "ÿ", "Ö", "Ü", "¢", "£", "¥", "₧", "ƒ"
@@ -1046,37 +1069,38 @@ drawAscii(hWnd, w, h) {
     cp437_4 := ["└", "┴", "┬", "├", "─", "┼", "╞", "╟", "╚", "╔", "╩", "╦", "╠", "═", "╬", "╧"
             , "╨", "╤", "╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀"
             , "α", "ß", "Γ", "π", "Σ", "σ", "µ", "τ", "Φ", "Θ", "Ω", "δ", "∞", "φ", "ε", "∩"
-            , "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■", " "]
+            , "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■", "⬜"]
 
 	size := (h - 54) / 64
 	loop, 64 {
+		i := A_Index - 1
 		if (mod(A_Index, 2) = 0) {
-			Gdip_FillRectangle(graphics, pBrush, 11, (A_Index - 1) * size + 42 , w - 22, size)
+			Gdip_FillRectangle(graphics, pBrush, 11, i * size + 42 , w - 22, size)
 		}
 
 		; 第一列
-        CreateRectF(RC, 20, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_1[A_Index], hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 80, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", A_Index - 1), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 140, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", A_Index - 1), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 200, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", A_Index - 1), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 20, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_1[A_Index] : chr(i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", i), hFont, hFormat, pBrushText, RC)
 
 		; 第二列
-        CreateRectF(RC, 20 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_2[A_Index], hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 80 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 140 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 200 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 20 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_2[A_Index] : chr(64 + i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
 
 		; 第三列
-        CreateRectF(RC, 20 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_3[A_Index], hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 80 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 140 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 200 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 20 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_3[A_Index] : chr(128 + i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW * 2, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
 
 		; 第四列
-        CreateRectF(RC, 20 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_4[A_Index], hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 80 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 140 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
-        CreateRectF(RC, 200 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 20 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, CP437 ? cp437_4[A_Index] : chr(192 + i), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("0x{1:02X}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW * 3, i * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
 	}
 
 	Gdip_DrawLine(graphics, pPen, 10 + CW, 10, 10 + CW, h - 10)
