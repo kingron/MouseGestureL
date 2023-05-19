@@ -981,12 +981,12 @@ UriDecode(Uri)
 
 ; 设置快捷键为 Caps Lock + a
 CapsLock & a::
-	Gui, Asc:New, +LastFound +Resize +MinSize640x480
+	Gui, Asc:New, +LastFound +Resize +MinSize1080x820
 	Gui, Asc:Add, Picture, x0 y0 w600 h500 0xE vMyPicture
-    Gui, Asc:Show, w1920 h1000, ASCII 码表
-    Gui, Asc:Show, Maximize, ASCII 码表
+    Gui, Asc:Show, w1920 h1010, ASCII 码表
 	GuiControlGet, hwnd, hwnd, MyPicture
     WinGetPos, x, y, w, h, ahk_id %hwnd%
+    OutputDebug ==========
 	drawAscii(hwnd, w, h)
     return
 
@@ -1014,90 +1014,79 @@ drawAscii(hWnd, w, h) {
 	Gdip_FillRectangle(graphics, pBrush, 11, 11, w - 22, 29)
 
 	pPen := Gdip_CreatePen(0xff000000, 1)
-	Gdip_TextToGraphics(graphics, "字符", "x20 y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "DEC", "x80 y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "HEX", "x140 y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "OCT", "x200 y15 center vcenter s14", "微软雅黑")
+    hFamily := Gdip_FontFamilyCreate("Consolas") ; Verdana, Lucida Sans Unicode, Georgia, Consolas
+    hFont := Gdip_FontCreate(hFamily, 15, 0)
+    hFormat := Gdip_StringFormatCreate(0x4000)
+    pBrushText := Gdip_BrushCreateSolid("0xff000000")
+    Gdip_SetTextRenderingHint(graphics, 1)  ; 抗锯齿设置
+    hFamilyCn := Gdip_FontFamilyCreate("微软雅黑")
+    hFontCn := Gdip_FontCreate(hFamilyCn, 16, 1)
 
-	Gdip_TextToGraphics(graphics, "字符", "x" . (w-20)/4 + 10 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "DEC", "x" . (w-20)/4 + 70 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "HEX", "x" . (w-20)/4 + 130 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "OCT", "x" . (w-20)/4 + 190 . " y15 center vcenter s14", "微软雅黑")
+    CW := (w - 20) // 4  ; 列宽
+    loop, 4 {
+        CreateRectF(RC, (A_Index - 1) * CW + 20, 15, 80, 15), Gdip_DrawString(graphics, "字符", hFontCn, hFormat, pBrushText, RC)
+        CreateRectF(RC, (A_Index - 1) * CW + 80, 15, 80, 15), Gdip_DrawString(graphics, "DEC", hFontCn, hFormat, pBrushText, RC)
+        CreateRectF(RC, (A_Index - 1) * CW + 140, 15, 80, 15), Gdip_DrawString(graphics, "HEX", hFontCn, hFormat, pBrushText, RC)
+        CreateRectF(RC, (A_Index - 1) * CW + 200, 15, 80, 15), Gdip_DrawString(graphics, "OCT", hFontCn, hFormat, pBrushText, RC)
+    }
 
-	Gdip_TextToGraphics(graphics, "字符", "x" . (w-20)/2 + 10 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "DEC", "x" . (w-20)/2 + 70 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "HEX", "x" . (w-20)/2 + 130 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "OCT", "x" . (w-20)/2 + 190 . " y15 center vcenter s14", "微软雅黑")
+    cp437_1 := ["␀", "␁", "␂", "␃", "␄", "␅", "␆", "␇", "␈", "␉", "␊", "␋", "␌", "␍", "␎", "␏"
+            , "␐", "␑", "␒", "␓", "␔", "␕", "␖", "␗", "␘", "␙", "␚", "␛", "␜", "␝", "␞", "␟"
+            , "␠", "!", """", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/"
+            , "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ":", ";", "<", "=", ">", "?"]
 
-	Gdip_TextToGraphics(graphics, "字符", "x" . w - (w-20)/4 + 10 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "DEC", "x" . w - (w-20)/4 + 70 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "HEX", "x" . w - (w-20)/4 + 130 . " y15 center vcenter s14", "微软雅黑")
-	Gdip_TextToGraphics(graphics, "OCT", "x" . w - (w-20)/4 + 190 . " y15 center vcenter s14", "微软雅黑")
+    cp437_2 := ["@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"
+            , "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "[", "\", "]", "^", "_"
+            , "`", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"
+            , "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "{", "|", "}", "~", "␡"]
+    cp437_3 := ["Ç", "ü", "é", "â", "ä", "à", "å", "ç", "ê", "ë", "è", "ï", "î", "ì", "Ä", "Å"
+            , "É", "æ", "Æ", "ô", "ö", "ò", "û", "ù", "ÿ", "Ö", "Ü", "¢", "£", "¥", "₧", "ƒ"
+            , "á", "í", "ó", "ú", "ñ", "Ñ", "ª", "º", "¿", "⌐", "¬", "½", "¼", "¡", "«", "»"
+            , "░", "▒", "▓", "│", "┤", "╡", "╢", "╖", "╕", "╣", "║", "╗", "╝", "╜", "╛", "┐"]
+    cp437_4 := ["└", "┴", "┬", "├", "─", "┼", "╞", "╟", "╚", "╔", "╩", "╦", "╠", "═", "╬", "╧"
+            , "╨", "╤", "╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀"
+            , "α", "ß", "Γ", "π", "Σ", "σ", "µ", "τ", "Φ", "Θ", "Ω", "δ", "∞", "φ", "ε", "∩"
+            , "≡", "±", "≥", "≤", "⌠", "⌡", "÷", "≈", "°", "∙", "·", "√", "ⁿ", "²", "■", " "]
 
 	size := (h - 54) / 64
 	loop, 64 {
 		if (mod(A_Index, 2) = 0) {
-			Gdip_FillRectangle(graphics, pBrush, 11, (A_Index - 1) * size + 43 , w - 22, size)
+			Gdip_FillRectangle(graphics, pBrush, 11, (A_Index - 1) * size + 42 , w - 22, size)
 		}
+
 		; 第一列
-		pos := "x20 y" (A_Index - 1) * size + 41 " center vcenter s" size ; CHAR
-		Gdip_TextToGraphics(graphics, chr(A_Index - 1), pos, "Consolas")
-
-		pos := "x80 y" (A_Index - 1) * size + 41 " center vcenter s" size  ; DEC
-		Gdip_TextToGraphics(graphics, Format("{1:02d}", A_Index - 1), pos, "Consolas")
-
-		pos := "x140 y" (A_Index - 1) * size + 41 " center vcenter s" size  ; HEX
-		Gdip_TextToGraphics(graphics, Format("{1:02X}", A_Index - 1), pos, "Consolas")
-
-		pos := "x200 y" (A_Index - 1) * size + 41 " center vcenter s" size  ; OCT
-		Gdip_TextToGraphics(graphics, Format("{1:03o}", A_Index - 1), pos, "Consolas")
+        CreateRectF(RC, 20, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_1[A_Index], hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", A_Index - 1), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", A_Index - 1), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", A_Index - 1), hFont, hFormat, pBrushText, RC)
 
 		; 第二列
-		pos := "x" (w-20)/4 + 10 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; Char
-		Gdip_TextToGraphics(graphics, chr(64 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/4 + 70 "y" (A_Index - 1) * size + 41 " center vcenter s" size  ; DEC
-		Gdip_TextToGraphics(graphics, Format("{1:02d}", 64 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/4 + 130 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; HEX
-		Gdip_TextToGraphics(graphics, Format("{1:02X}", 64 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/4 + 190 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; OCT
-		Gdip_TextToGraphics(graphics, Format("{1:02o}", 64 + A_Index - 1), pos, "Consolas")
+        CreateRectF(RC, 20 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_2[A_Index], hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 63 + A_Index), hFont, hFormat, pBrushText, RC)
 
 		; 第三列
-		pos := "x" (w-20)/2 + 10 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; Char
-		Gdip_TextToGraphics(graphics, chr(128 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/2 + 70 "y" (A_Index - 1) * size + 41 " center vcenter s" size  ; DEC
-		Gdip_TextToGraphics(graphics, Format("{1:02d}", 128 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/2 + 130 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; HEX
-		Gdip_TextToGraphics(graphics, Format("{1:02X}", 128 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" (w-20)/2 + 190 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; OCT
-		Gdip_TextToGraphics(graphics, Format("{1:02o}", 128 + A_Index - 1), pos, "Consolas")
+        CreateRectF(RC, 20 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_3[A_Index], hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW * 2, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 127 + A_Index), hFont, hFormat, pBrushText, RC)
 
 		; 第四列
-		pos := "x" w - (w-20)/4 + 10 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; Char
-		Gdip_TextToGraphics(graphics, chr(192 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" w - (w-20)/4 + 70 "y" (A_Index - 1) * size + 41 " center vcenter s" size  ; DEC
-		Gdip_TextToGraphics(graphics, Format("{1:02d}", 192 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" w - (w-20)/4 + 130 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; HEX
-		Gdip_TextToGraphics(graphics, Format("{1:02X}", 192 + A_Index - 1), pos, "Consolas")
-
-		pos := "x" w - (w-20)/4 + 190 "y" (A_Index - 1) * size + 41 " center vcenter s" size ; OCT
-		Gdip_TextToGraphics(graphics, Format("{1:02o}", 192 + A_Index - 1), pos, "Consolas")
+        CreateRectF(RC, 20 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, cp437_4[A_Index], hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 80 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02d}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 140 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:02X}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
+        CreateRectF(RC, 200 + CW * 3, (A_Index - 1) * size + 40, 80, size), Gdip_DrawString(graphics, Format("{1:03o}", 191 + A_Index), hFont, hFormat, pBrushText, RC)
 	}
 
-	Gdip_DrawLine(graphics, pPen, (w - 20)/4, 10, (w - 20)/4, h - 10)
-	Gdip_DrawLine(graphics, pPen, (w - 20)/2, 10, (w - 20)/2, h - 10)
-	Gdip_DrawLine(graphics, pPen, w - (w - 20)/4, 10, w - (w - 20)/4, h - 10)
+	Gdip_DrawLine(graphics, pPen, 10 + CW, 10, 10 + CW, h - 10)
+	Gdip_DrawLine(graphics, pPen, 10 + CW * 2, 10, 10 + CW * 2, h - 10)
+	Gdip_DrawLine(graphics, pPen, 10 + CW * 3, 10, 10 + CW * 3, h - 10)
 
     hBitmap := Gdip_CreateHBITMAPFromBitmap(pBitmap)
 	SetImage(hWnd, hBitmap)
+	Gdip_DeleteBrush(pBrush), Gdip_DeleteStringFormat(hFormat), Gdip_DeleteFont(hFont), Gdip_DeleteFontFamily(hFamily)
+	Gdip_DeleteFont(hFontCn), Gdip_DeleteFontFamily(hFamilyCn)
 	Gdip_DeleteGraphics(graphics), Gdip_DisposeImage(pBitmap), DeleteObject(hBitmap)
 	Gdip_Shutdown("pToken")
 }
