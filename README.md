@@ -4,11 +4,11 @@ MouseGestureL是一个极其强大的工具，并且资源消耗极低，只占�
 
 ## 效果图
 
-![窗口分屏，IP显示，窗口置顶，屏幕取色，任意窗口半透明](images/win.png)
-![表达式和公式计算器](images/calc.png)
-![快捷运行自定义](images/hotrun.png)
-![ASCII码表，屏幕测距，截屏贴图](images/ascii.png)
-![鼠标聚焦，窗口信息查看器，哈希计算](images/spot.png)
+![窗口分屏，IP显示，窗口置顶，屏幕取色，任意窗口半透明](./images/win.png)
+![表达式和公式计算器](./images/calc.png)
+![快捷运行自定义](./images/hotrun.png)
+![ASCII码表，屏幕测距，截屏贴图](./images/ascii.png)
+![鼠标聚焦，窗口信息查看器，哈希计算](./images/spot.png)
 
 ## 功能和快捷键
 
