@@ -1,5 +1,17 @@
 # MouseGestureL
 
+MouseGestureL是一个极其强大的工具，并且资源消耗极低，只占用15MB内存，不消耗CPU，整个程序大小3MB，是日常办公的强力工具和助手。
+
+## 效果图
+
+![窗口分屏，IP显示，窗口置顶，屏幕取色，任意窗口半透明](images/win.png)
+![表达式和公式计算器](images/calc.png)
+![快捷运行自定义](images/hotrun.png)
+![ASCII码表，屏幕测距，截屏贴图](images/ascii.png)
+![鼠标聚焦，窗口信息查看器，哈希计算](images/spot.png)
+
+## 功能和快捷键
+
 * 强大的鼠标手势工具，提供下面的功能。
 * 可修改Config\MG_User.ahk，更改其中一些程序运行的路径，部分程序需要安装
 * MB 指的是按住鼠标右键
@@ -49,9 +61,11 @@
 | F3                    | Chrome/Edge中使用，会打开首页                                                               | Ctrl + PrintScreen    | 打开 SnagIt，需要安装SnagIt                                                       | 
 | Ctrl + \              | 等价Ctrl+NumPad+，适合笔记本，自动列宽                                                          | PrintScreen           | 自动截图到剪切板并保存到用户图片目录\autocapture                                             |
 | Win+PrintScreen       | Win8以下则自动截图并打开画笔程序粘贴，Win8以上则自动截图保存到用户图片目录\屏幕截图下                                    | Win+左键拖动              | 截图并贴图，复制到剪切板                                                               |
-| Ctrl + Win + W        | 打开Window Spy，查看窗口信息                                                                |                       |                                                                            |
+| Ctrl + Win + W        | 打开Window Spy，查看窗口信息                                                                | CapsLock + W                      | 播放/暂停                                                                      |
 | Ctrl + Alt + 鼠标左键点击拖动 | 测量屏幕距离和角度（自动吸附）                                                                    | Ctrl + Alt + 鼠标右键点击拖动 | 测量屏幕距离和角度                                                                  |
 | Ctrl + Win + X        | 对屏幕进行截图并光学识别，仅Win10及以上，需要到系统设置，时间和语言，语言，添加语言，添加相应的体验包之后才可以支持OCR识别                  | Win + Shift + H       | 快捷短语设置，设置后会自动重启脚本                                                          |
-| CapsLock + D          | 删除行功能                                                                              | CapsLock + G          | 运行系统自带计算器                                                                  |
+| CapsLock + D          | 删除行功能                                                                              | 打开系统计算器          | 运行系统自带计算器                                                                  |
 | CapsLock + R          | 播放上一首歌曲                                                                            | CapsLock + F          | 播放下一首歌曲                                                                    |
-| CapsLock + C          | 复制浏览器地址并解码URL                                                                      |           |                                                                    |
+| CapsLock + C          | 在浏览器中，复制浏览器地址并解码URL                                                                | CapsLock + A          | 打开 ASCII 码表                                                                |
+| Ctrl + Win + G           |  随机密码生成                                                                             | CapsLock + N          | 打开记事本                                                                      |
+| CapsLock + Q          | 静音                                                                                 | CapsLock + N          | 打开记事本                                                                      |

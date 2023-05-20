@@ -120,6 +120,21 @@ goto End
 ; #e:: 资源管理器
 #f::Run hfs.exe
 #g::Run gost -C \Tools\gost.json
+^#g::   ; 随机密码生成
+    InputBox, length, 请输入随机密码字符串长度
+    charset := "@~_?!$#%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@~_?!$#%"
+    password := ""
+    if (length > 0) {
+        Loop, %length% {
+            Random, index, 1, StrLen(charset)
+            ch := SubStr(charset, index, 1)
+            password .= ch
+        }
+        showMessage("结果", password)
+        clipboard := password
+    }
+	return
+
 #h:: 
 	Process, Exist, heidisql.exe
 	if (ErrorLevel == 0) {
