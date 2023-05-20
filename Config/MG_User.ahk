@@ -1031,17 +1031,28 @@ PopupMenu(wParam, lParam, msg, hwnd) {
 	Menu, MyMenu, DeleteAll
     Menu, MyMenu, Add, 切换代码页`(&P`), ChangeCodePage
     Menu, MyMenu, Add
-    Menu, MyMenu, Add, Verdana, AscFont, +Check
-    Menu, MyMenu, Add, Lucida Sans Unicode, AscFont, +Check
-    Menu, MyMenu, Add, Georgia, AscFont, +Check
+    Menu, MyMenu, Add, Arial, AscFont, +Check
     Menu, MyMenu, Add, Consolas, AscFont, +Check
-    Menu, MyMenu, Add, Trebuchet MS, AscFont, +Check
+    Menu, MyMenu, Add, Courier New, AscFont, +Check
+    Menu, MyMenu, Add, Georgia, AscFont, +Check
+    Menu, MyMenu, Add, Lucida Console, AscFont, +Check
+    Menu, MyMenu, Add, Lucida Sans Unicode, AscFont, +Check
+    Menu, MyMenu, Add, Microsoft Sans Serif, AscFont, +Check
+    Menu, MyMenu, Add, Microsoft YaHei UI, AscFont, +Check
+    Menu, MyMenu, Add, Segoe UI, AscFont, +Check
     Menu, MyMenu, Add, Symbol, AscFont, +Check
+    Menu, MyMenu, Add, Tahoma, AscFont, +Check
+    Menu, MyMenu, Add, Times New Roman, AscFont, +Check
+    Menu, MyMenu, Add, Trebuchet MS, AscFont, +Check
+    Menu, MyMenu, Add, Verdana, AscFont, +Check
     Menu, MyMenu, Add, Webdings, AscFont, +Check
     Menu, MyMenu, Add, Wingdings, AscFont, +Check
     Menu, MyMenu, Add, Wingdings 2, AscFont, +Check
     Menu, MyMenu, Add, Wingdings 3, AscFont, +Check
     Menu, MyMenu, Add, 等线, AscFont, +Check
+    Menu, MyMenu, Add, 黑体, AscFont, +Check
+    Menu, MyMenu, Add, 宋体, AscFont, +Check
+    Menu, MyMenu, Add, 幼圆, AscFont, +Check
     Menu, MyMenu, Add, 微软雅黑, AscFont, +Check
     Menu, MyMenu, Check, %AscFontName%
 	Menu, MyMenu, Show
@@ -1070,7 +1081,7 @@ drawAscii(hWnd, w, h) {
 	size := (h - 54) / 64
     CW := (w - 20) // 4  ; 列宽
     OutputDebug 字体大小: %size%, 列宽: %CW%
-	top := 39
+	top := 41
 
 	pToken := Gdip_Startup()
     pBitmap := Gdip_CreateBitmap(w, h)
@@ -1119,7 +1130,7 @@ drawAscii(hWnd, w, h) {
 	loop, 64 {
 		i := A_Index - 1
 		if (mod(A_Index, 2) = 0) {
-			Gdip_FillRectangle(graphics, pBrush, 11, i * size + top + 2, w - 22, size + 1)
+			Gdip_FillRectangle(graphics, pBrush, 11, i * size + top + 1, w - 22, size)
 		}
 
 		; 第一列
