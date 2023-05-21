@@ -302,26 +302,40 @@ goto End
 #y:: MouseClick, right
 #z::Run procexp.exe
 #^z::
-	Gui, Calc:New, +LastFound +Resize +ToolWindow +MinSize200x150 +AlwaysOnTop
+	global ScriptEngine := 1
+	Gui, Calc:New, +LastFound +Resize +MinSize200x150
 	Gui, Calc:Font, s16
-    Gui, Calc:Add, Text, x10 y10 w580 h20 left, 请输入表达式，按 Ctrl + D，清空结果框：
-    Gui, Calc:Add, Edit, x10 y40 w490 h30 Resize r1 vInputText -background, % left(Clipboard, "`n")
-    Gui, Calc:Add, Button, x510 y40 w80 h30 vCalcButton gCalcOK Default, &Calc
+    Gui, Calc:Add, Text, x10 y10 w880 h20 left, 请输入表达式，按 Ctrl + D，清空结果框：
+    Gui, Calc:Add, Edit, x10 y40 w800 h130 Resize vInputText -background, % Clipboard
+    Gui, Calc:Add, Button, 810 y40 w80 h30 vCalcButton gCalcOK Default, &Calc
+	Gui, Calc:Font, s11
+    Gui, Calc:Add, Radio, 810 y90 w90 h30 vRadioVBS left gSelectEngine, VBScript
+    Gui, Calc:Add, Radio, 810 y130 w90 h30 vRadioJS checked left gSelectEngine, JScript
     Gui, Calc:Color, , 0xeeeeee
-    Gui, Calc:Add, Edit, x10 y80 w580 h390 vResultText Resize,
-    Gui, Calc:Show, w600 h480, 计算器
+    Gui, Calc:Add, Edit, x10 y180 w880 h490 vResultText Resize,
+    Gui, Calc:Show, w600 h580, 计算器
 	WinSet, Transparent, 240
 	return
 
+	SelectEngine:
+		if (A_GuiControl = "RadioVBS") {
+			MsgBox 使用VBS引擎时，最后返回值必须用 result = 赋值，例如 result = a + b，result = chr(65)等，否则不会输出结果。
+			ScriptEngine := 0
+		} else {
+			ScriptEngine := 1
+		}
+		return
 #IfWinActive, 计算器 ahk_class AutoHotkeyGUI
 	^d::
 		GuiControl, Calc:Text, ResultText,
 		return
 #IfWinActive
 	CalcGuiSize:
-		GuiControl, Move, InputText, % "w" A_GuiWidth-120 " h30"
-		GuiControl, Move, CalcButton, % "X" A_GuiWidth-90 " h30"
-		GuiControl, Move, ResultText, % "w" A_GuiWidth-20 " h" A_GuiHeight-90
+		GuiControl, Move, InputText, % "w" A_GuiWidth-110
+		GuiControl, Move, CalcButton, % "X" A_GuiWidth-90
+		GuiControl, Move, RadioVBS, % "X" A_GuiWidth-90
+		GuiControl, Move, RadioJS, % "X" A_GuiWidth-90
+		GuiControl, Move, ResultText, % "w" A_GuiWidth-20 " h" A_GuiHeight-190
 		return
 
 	CalcGuiEscape:
@@ -336,10 +350,22 @@ goto End
 
 		GuiControlGet, CurrentText, , ResultText
 		FormatTime, CurrentDateTime,, [HH:mm:ss]
-		try { 
+		try {
 			#Include %A_ScriptDir%\ActiveScript.ahk
-			vb := new ActiveScript("VBScript")
-			result := vb.Eval(InputText)
+
+			if (ScriptEngine = 0) {
+				vb := ComObjCreate("MSScriptControl.ScriptControl")
+				vb.Language := "VBscript"
+				CodeString := ""
+				ReturnString := ""
+
+				vb.AddCode(InputText)
+				result := vb.Eval("result") . "`r`n"
+			} else {
+				vb := new ActiveScript("JScript")
+				result := vb.eval(InputText) . "`r`n"
+			}
+
 			GuiControl, Focus, InputText
 			Sleep 10
 			Send ^a
