@@ -354,18 +354,13 @@ goto End
 		GuiControlGet, CurrentText, , ResultText
 		FormatTime, CurrentDateTime,, [HH:mm:ss]
 		try {
-			#Include %A_ScriptDir%\ActiveScript.ahk
-
+			vb := ComObjCreate("MSScriptControl.ScriptControl")
 			if (ScriptEngine = 0) {
-				vb := ComObjCreate("MSScriptControl.ScriptControl")
 				vb.Language := "VBscript"
-				CodeString := ""
-				ReturnString := ""
-
 				vb.AddCode(InputText)
 				result := vb.Eval("result") . "`r`n"
 			} else {
-				vb := new ActiveScript("JScript")
+				vb.Language := "VBscript"
 				result := vb.eval(InputText) . "`r`n"
 			}
 
