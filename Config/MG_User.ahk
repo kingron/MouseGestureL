@@ -4,8 +4,6 @@ global ontop := true
 global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
-global CP437 := true
-global AscFontName := "Lucida Sans Unicode"
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 ; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
@@ -329,7 +327,6 @@ goto End
     ^g::
     ^enter::
     ^f::
-        OutputDebug ooooo==========
         ControlClick, Button1, A,
         return
 	^d::
@@ -1039,6 +1036,8 @@ GetClientSize(hwnd, ByRef w, ByRef h)
 
 ; 设置快捷键为 Caps Lock + a, 显示 ASCII 码表，支持系统默认代码页和 Code Page 437 切换
 CapsLock & a::
+    global CP437 := true
+    global AscFontName := "Lucida Sans Unicode"
 	global MyPicture, AscTitle, AscPicture, AscHwnd
 	AscTitle := CP437 ? "ASCII 码表 - 代码页 437" : "ASCII 码表 - 系统默认代码页"
 	Gui, Asc:New, +LastFound +Resize +MinSize1320x920
