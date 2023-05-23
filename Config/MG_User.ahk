@@ -307,13 +307,13 @@ goto End
 	Gui, Calc:Font, s16
     Gui, Calc:Add, Text, x10 y10 w880 h20 left, 请输入表达式，按 Ctrl + D，清空结果框：
     Gui, Calc:Add, Edit, x10 y40 w800 h130 Resize vInputText -background, % Clipboard
-    Gui, Calc:Add, Button, 810 y40 w80 h30 vCalcButton gCalcOK Default, &Calc
+    Gui, Calc:Add, Button, x810 y40 w80 h30 vCalcButton gCalcOK Default, &Calc
 	Gui, Calc:Font, s11
-    Gui, Calc:Add, Radio, 810 y90 w90 h30 vRadioVBS left gSelectEngine, VBScript
-    Gui, Calc:Add, Radio, 810 y130 w90 h30 vRadioJS checked left gSelectEngine, JScript
+    Gui, Calc:Add, Radio, x810 y90 w90 h30 vRadioVBS left gSelectEngine, VBScript
+    Gui, Calc:Add, Radio, x810 y130 w90 h30 vRadioJS checked left gSelectEngine, JScript
     Gui, Calc:Color, , 0xeeeeee
     Gui, Calc:Add, Edit, x10 y180 w880 h490 vResultText Resize,
-    Gui, Calc:Show, w600 h580, 计算器
+    Gui, Calc:Show, w900 h680, 计算器
 	WinSet, Transparent, 240
 	return
 
@@ -326,6 +326,12 @@ goto End
 		}
 		return
 #IfWinActive, 计算器 ahk_class AutoHotkeyGUI
+    ^g::
+    ^enter::
+    ^f::
+        OutputDebug ooooo==========
+        ControlClick, Button1, A,
+        return
 	^d::
 		GuiControl, Calc:Text, ResultText,
 		return
@@ -366,14 +372,14 @@ goto End
 				result := vb.eval(InputText) . "`r`n"
 			}
 
-			GuiControl, Focus, InputText
-			Sleep 10
-			Send ^a
 			vb := ""
 		} catch e {
 			result := e.Message
 		}
 		GuiControl, , ResultText, % CurrentDateTime " " InputText " => " result "`r`n" CurrentText
+        GuiControl, Focus, InputText
+        Sleep 10
+        Send ^a
 		return
 #`::WinMinimize,A
 ; 等价于按数字小键盘 *
