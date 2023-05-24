@@ -360,7 +360,7 @@ goto End
 				vb.AddCode(InputText)
 				result := vb.Eval("result") . "`r`n"
 			} else {
-				vb.Language := "VBscript"
+				vb.Language := "JScript"
 				result := vb.eval(InputText) . "`r`n"
 			}
 
