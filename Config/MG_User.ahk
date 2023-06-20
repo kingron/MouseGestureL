@@ -1014,9 +1014,10 @@ Capslock & c::
     Return
 #IfWinActive
 
+#Include %A_ScriptDir%\ActiveScript.ahk
 UriDecode(Uri)
 {
-	oSC := new ActiveScript("JScript")
+    oSC := new ActiveScript("JScript")
 	return oSC.decodeURIComponent(Uri)
 }
 
