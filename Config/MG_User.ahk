@@ -4,6 +4,8 @@ global ontop := true
 global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
+global wallpaper := 0
+SetTimer, GetAndSetBingWallpaper, 3600000
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 ; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
@@ -13,6 +15,33 @@ If (DisabledHotkeys = "") {
 	MsgBox 关闭了系统默认热键设置(Win+Q/W/T/U/S/F/G/H/K/C/V/M)。`n请注销或者重启系统以便生效
 }
 goto End
+
+#+w::
+; 获取并设置Bing壁纸函数
+GetAndSetBingWallpaper:
+    ; 获取Bing壁纸的URL
+    URLDownload := "https://www.bing.com/HPImageArchive.aspx?format=js&idx=" . wallpaper . "&n=1"
+    wallpaper := wallpaper + 1
+    if (wallpaper >= 7) {
+        wallpaper := 0
+    }
+
+    ; 发送HTTP请求获取JSON数据
+    UrlDownloadToFile, % URLDownload, bing.json
+
+    ; 解析JSON数据，提取壁纸URL
+    FileRead, BingData, bing.json
+    ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
+
+    ; 下载壁纸图片
+    URLDownload := "https://www.bing.com" . ImageURL
+    UrlDownloadToFile, % URLDownload, bing_wallpaper.jpg
+
+    ; 设置壁纸
+	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\bing_wallpaper.jpg", "UInt", 2)
+    FileDelete, bing.json
+;    FileDelete, bing_wallpaper.jpg
+return
 
 ; Hot Run 管理
 #Include *i %A_ScriptDir%\HotRun.ahk
