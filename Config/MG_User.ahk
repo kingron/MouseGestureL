@@ -6,6 +6,7 @@ global osdPID := 0
 global spyPID := 0
 global wallpaper := 0
 SetTimer, GetAndSetBingWallpaper, 3600000
+GetAndSetBingWallpaper()
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 ; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
@@ -16,7 +17,9 @@ If (DisabledHotkeys = "") {
 }
 goto End
 
-#+w:: GetAndSetBingWallpaper()
+#+w::
+    GetAndSetBingWallpaper()
+    return
 ; 获取并设置Bing壁纸函数
 GetAndSetBingWallpaper() {
     ; 获取Bing壁纸的URL
