@@ -14,7 +14,7 @@ If (DisabledHotkeys = "") {
 	Run reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v DisabledHotkeys /d QWTUSFGHKCVM
 	MsgBox 关闭了系统默认热键设置(Win+Q/W/T/U/S/F/G/H/K/C/V/M)。`n请注销或者重启系统以便生效
 }
-goto End
+goto GetAndSetBingWallpaper
 
 #+w::
 ; 获取并设置Bing壁纸函数
@@ -42,6 +42,7 @@ GetAndSetBingWallpaper:
     FileDelete, bing.json
 ;    FileDelete, bing_wallpaper.jpg
 return
+goto End
 
 ; Hot Run 管理
 #Include *i %A_ScriptDir%\HotRun.ahk
