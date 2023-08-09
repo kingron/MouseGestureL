@@ -33,13 +33,20 @@ GetAndSetBingWallpaper() {
     UrlDownloadToFile, % URLDownload, bing.json
 
     ; 解析JSON数据，提取壁纸URL
+    FileEncoding, UTF-8
     FileRead, BingData, bing.json
     ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
-
+    ImageTitle := RegExReplace(BingData, ".*""title"":""([^""]*).*", "$1")
+    ImageCopyright := RegExReplace(BingData, ".*""copyright"":""([^""]*).*", "$1")
     ; 下载壁纸图片
     URLDownload := "https://www.bing.com" . ImageURL
     UrlDownloadToFile, % URLDownload, bing_wallpaper.jpg
 
+    try {
+        RunWait, ffmpeg -y -i "bing_wallpaper.jpg" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-20:y=h-th-80:fontsize=20:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-20:y=h-th-50:fontsize=20:fontcolor=white" -q:v 6 "bing_wallpaper.jpg",, Hide
+    } catch e {
+        OutputDebug, % e.Message
+    }
     ; 设置壁纸
 	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\bing_wallpaper.jpg", "UInt", 2)
     FileDelete, bing.json
