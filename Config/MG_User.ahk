@@ -36,6 +36,7 @@ GetAndSetBingWallpaper() {
     FileEncoding, UTF-8
     FileRead, BingData, bing.json
     ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
+;    ImageURL := RegExReplace(BingData, ".*""urlbase"":""([^""]*).*", "$1") . "_UHD.jpg"
     ImageTitle := RegExReplace(BingData, ".*""title"":""([^""]*).*", "$1")
     ImageCopyright := RegExReplace(BingData, ".*""copyright"":""([^""]*).*", "$1")
     ; 下载壁纸图片
@@ -43,7 +44,7 @@ GetAndSetBingWallpaper() {
     UrlDownloadToFile, % URLDownload, bing_wallpaper.jpg
 
     try {
-        RunWait, ffmpeg -y -i "bing_wallpaper.jpg" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-20:y=h-th-80:fontsize=20:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-20:y=h-th-50:fontsize=20:fontcolor=white" -q:v 6 "bing_wallpaper.jpg",, Hide
+        RunWait, ffmpeg -y -i "bing_wallpaper.jpg" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-20:y=h-th-80:fontsize=20:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-20:y=h-th-50:fontsize=16:fontcolor=white" -q:v 6 "bing_wallpaper.jpg",, Hide
     } catch e {
         OutputDebug, % e.Message
     }
