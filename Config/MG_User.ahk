@@ -22,6 +22,7 @@ goto End
     return
 ; 获取并设置Bing壁纸函数
 GetAndSetBingWallpaper() {
+    FileCreateDir, Wallpaper
     ; 获取Bing壁纸的URL
     URLDownload := "https://www.bing.com/HPImageArchive.aspx?format=js&idx=" . wallpaper . "&n=1"
     wallpaper := wallpaper + 1
@@ -35,23 +36,26 @@ GetAndSetBingWallpaper() {
     ; 解析JSON数据，提取壁纸URL
     FileEncoding, UTF-8
     FileRead, BingData, bing.json
-    ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
-;    ImageURL := RegExReplace(BingData, ".*""urlbase"":""([^""]*).*", "$1") . "_UHD.jpg"
-    ImageTitle := RegExReplace(BingData, ".*""title"":""([^""]*).*", "$1")
-    ImageCopyright := RegExReplace(BingData, ".*""copyright"":""([^""]*).*", "$1")
-    ; 下载壁纸图片
-    URLDownload := "https://www.bing.com" . ImageURL
-    UrlDownloadToFile, % URLDownload, bing_wallpaper.jpg
-
-    try {
-        RunWait, ffmpeg -y -i "bing_wallpaper.jpg" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-20:y=h-th-80:fontsize=20:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-20:y=h-th-50:fontsize=16:fontcolor=white" -q:v 6 "bing_wallpaper.jpg",, Hide
-    } catch e {
-        OutputDebug, % e.Message
+;    ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_1920x1080.jpg"
+    ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_UHD.jpg"
+    if (!FileExist(ImageFile)) {
+;        ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
+        ImageURL := RegExReplace(BingData, ".*""urlbase"":""([^""]*).*", "$1") . "_UHD.jpg"
+        ImageTitle := RegExReplace(BingData, ".*""title"":""([^""]*).*", "$1")
+        ImageCopyright := RegExReplace(BingData, ".*""copyright"":""([^""]*).*", "$1")
+        ; 下载壁纸图片
+        URLDownload := "https://www.bing.com" . ImageURL
+        OutputDebug, % URLDownload
+        UrlDownloadToFile, % URLDownload, % ImageFile
+        try {
+            RunWait, ffmpeg -y -i "%ImageFile%" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-0.01*w:y=h-th-h*0.075:fontsize=0.025*h:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-0.01*w:y=h-th-0.045*h:fontsize=0.02*h:fontcolor=white" -q:v 6 "%ImageFile%",, Hide
+        } catch e {
+            OutputDebug, % e.Message
+        }
     }
     ; 设置壁纸
-	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\bing_wallpaper.jpg", "UInt", 2)
+	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\" . ImageFile, "UInt", 2)
     FileDelete, bing.json
-;    FileDelete, bing_wallpaper.jpg
 }
 
 ; Hot Run 管理
