@@ -36,6 +36,9 @@ GetAndSetBingWallpaper() {
     ; 解析JSON数据，提取壁纸URL
     FileEncoding, UTF-8
     FileRead, BingData, bing.json
+    if (BingData == "") {
+        return
+    }
 ;    ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_1920x1080.jpg"
     ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_UHD.jpg"
     if (!FileExist(ImageFile)) {
@@ -47,15 +50,19 @@ GetAndSetBingWallpaper() {
         URLDownload := "https://www.bing.com" . ImageURL
         OutputDebug, % URLDownload
         UrlDownloadToFile, % URLDownload, % ImageFile
-        try {
-            RunWait, ffmpeg -y -i "%ImageFile%" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-0.01*w:y=h-th-h*0.075:fontsize=0.025*h:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-0.01*w:y=h-th-0.045*h:fontsize=0.02*h:fontcolor=white" -q:v 6 "%ImageFile%",, Hide
-        } catch e {
-            OutputDebug, % e.Message
-        }
+        if (FileExist(ImageFile)) {
+	        try {
+	            RunWait, ffmpeg -y -i "%ImageFile%" -vf "drawtext=fontfile=微软雅黑:text='%ImageTitle%':x=w-tw-0.01*w:y=h-th-h*0.075:fontsize=0.025*h:fontcolor=white`,drawtext=fontfile=微软雅黑:text='%ImageCopyright%':x=w-tw-0.01*w:y=h-th-0.045*h:fontsize=0.02*h:fontcolor=white" -q:v 6 "%ImageFile%",, Hide
+	        } catch e {
+	            OutputDebug, % e.Message
+	        }
+	    }
     }
     ; 设置壁纸
-    Run, reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%A_WorkingDir%\%ImageFile%" /f,, hide
-	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\" . ImageFile, "UInt", 2)
+    if (FileExist(ImageFile)) {
+	    Run, reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%A_WorkingDir%\%ImageFile%" /f,, hide
+		DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\" . ImageFile, "UInt", 2)
+	}
     FileDelete, bing.json
 }
 
