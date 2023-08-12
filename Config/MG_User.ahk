@@ -54,6 +54,7 @@ GetAndSetBingWallpaper() {
         }
     }
     ; 设置壁纸
+    Run, reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%A_WorkingDir%\%ImageFile%" /f,, hide
 	DllCall("SystemParametersInfo", "UInt", 0x0014, "UInt", 0, "Str", A_WorkingDir . "\" . ImageFile, "UInt", 2)
     FileDelete, bing.json
 }
