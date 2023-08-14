@@ -24,6 +24,7 @@ goto End
 GetAndSetBingWallpaper() {
     FileCreateDir, Wallpaper
     ; 获取Bing壁纸的URL
+    ; https://bing.angustar.com/api/list?count=1&date=20230101
     URLDownload := "https://www.bing.com/HPImageArchive.aspx?format=js&idx=" . wallpaper . "&n=1"
     wallpaper := wallpaper + 1
     if (wallpaper >= 7) {
