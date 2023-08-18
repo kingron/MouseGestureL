@@ -1083,6 +1083,13 @@ GetClientSize(hwnd, ByRef w, ByRef h)
     h := NumGet(rc, 12, "int")
 }
 
+CapsLock & s::
+	InputBox, text, 内容, `n请输入要语音输出的内容,,400,180,,,,,学习时间到了，学习让人进步，学习让人快乐
+	if ErrorLevel
+		return
+	ComObjCreate("SAPI.SpVoice").Speak(text)
+	return
+
 ; 设置快捷键为 Caps Lock + a, 显示 ASCII 码表，支持系统默认代码页和 Code Page 437 切换
 CapsLock & a::
     global CP437 := true
