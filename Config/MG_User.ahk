@@ -7,6 +7,7 @@ global spyPID := 0
 global wallpaper := 0
 SetTimer, GetAndSetBingWallpaper, 3600000
 GetAndSetBingWallpaper()
+setTaskBarTransparent()
 ; ComObjCreate("SAPI.SpVoice").Speak("欢迎使用鼠标手势")
 ; 使用 ControlSend, ahk_parent, ^!a, A ，可以直接给窗口发热键而不触发全局热键
 
@@ -256,7 +257,8 @@ GetAndSetBingWallpaper() {
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
 #m::Run "SumatraPDF-3.4.6-64.exe"
-#^m::Run wmplayer.exe /playlist:music
+;#^m::Run wmplayer.exe /playlist:music
+#^m::Run D:\Tools\Winamp\Winamp.exe
 #n::Run Notepad++
 #o::Run wifi.bat
 ; #p:: 显示器
@@ -1072,6 +1074,11 @@ UriDecode(Uri)
 {
     oSC := new ActiveScript("JScript")
 	return oSC.decodeURIComponent(Uri)
+}
+
+setTaskBarTransparent() {
+	WinSet, Transparent, 220, ahk_class Shell_TrayWnd
+	WinSet, Transparent, 220, ahk_class ahk_class Shell_SecondaryTrayWnd
 }
 
 ; Retrieve the width (w) and height (h) of the client area.
