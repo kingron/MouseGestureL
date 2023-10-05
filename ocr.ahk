@@ -1,5 +1,6 @@
 GetArea() {
    area := []
+   startMouseX := startMouseY := ""
    StartSelection(area)
    while !area.w
       Sleep, 100

@@ -1017,6 +1017,26 @@ IsWin8OrHigh() {
 	return ver >= 8
 }
 
+ProcessChineseChars(string)
+{
+    result := ""
+    i := 1
+
+    while i <= StrLen(string) - 1
+    {
+        ch := SubStr(string, i, 1)
+        nextCh := SubStr(string, i + 1, 1)
+        if (ch = " " && nextCh > "~") {
+        } else {
+            result .= ch
+        }
+
+        i++
+    }
+
+    return result
+}
+
 #If !IsWin8OrHigh()
 ; Win + Print Screen, Windows 8 及以上，系统会自动保存到图片目录下
 #PrintScreen::
@@ -1036,6 +1056,9 @@ IsWin8OrHigh() {
 	pIRandomAccessStream := HBitmapToRandomAccessStream(hBitmap)
 	DllCall("DeleteObject", "Ptr", hBitmap)
 	text := ocr(pIRandomAccessStream, "zh-Hans-CN")
+	OutputDebug OCR: %text%
+    text := ProcessChineseChars(text)
+	OutputDebug After space: %text%
 	ObjRelease(pIRandomAccessStream)
 	showMessage("识别结果", text)
 	Return
