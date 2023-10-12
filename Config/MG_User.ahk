@@ -445,8 +445,14 @@ GetAndSetBingWallpaper() {
 ;	 Win-Alt-↓: less transparent
 ;	 Win-Alt-↑: more transparent
 
-#!UP:: SetTrans(4)
-#!DOWN:: SetTrans(-4)
+~Alt & WheelUp:: ; 按住Alt键并向上滚动
+#!UP::
+    SetTrans(5)
+    return
+~Alt & WheelDown:: ; 按住Alt键并向下滚动
+#!DOWN::
+    SetTrans(-5)
+    return
 
 SetTrans(offset) {
 	WinGet, trans, Transparent, A
