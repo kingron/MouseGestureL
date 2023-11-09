@@ -285,7 +285,8 @@ GetAndSetBingWallpaper() {
 	if ErrorLevel
 		return
 
-	Run, https://fanyi.baidu.com/#en/zh/%word%
+;	Run, https://fanyi.baidu.com/#en/zh/%word%
+	Run, https://www.deepl.com/translator#en/zh/%word%
 ;  shell := ComObjCreate("WScript.Shell")
 ;  exec := shell.Exec("CScript.exe //Nologo D:\tools\gt.js """ . word . """")
 ;  text := exec.StdOut.ReadAll()
