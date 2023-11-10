@@ -2,6 +2,8 @@
 
 MouseGestureL是一个极其强大的工具，并且资源消耗极低，只占用15MB内存，不消耗CPU，整个程序大小3MB，是日常办公的强力工具和助手。
 
+[![Lines Of Code](https://tokei.rs/b1/github/kingron/MouseGestureL?category=code)](https://github.com/kingron/MouseGestureL)
+
 ## 效果图
 
 ![窗口分屏，IP显示，窗口置顶，屏幕取色，任意窗口半透明](./images/win.png)
