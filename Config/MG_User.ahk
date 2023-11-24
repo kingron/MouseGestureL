@@ -1009,13 +1009,58 @@ PrintScreen::
 	OSD("截图保存到文件`n" . file)
 	return
 
+; 鼠标在任务栏滚动调整音量
 #If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
 WheelUp::Send {Volume_Up}
 WheelDown::Send {Volume_Down}
+; 任务栏 Ctrl + 鼠标滚动，调整屏幕亮度
+^WheelUp:: AdjustScreenBrightness(5)
+^WheelDown:: AdjustScreenBrightness(-5)
 
 MouseIsOver(WinTitle) {
 	MouseGetPos,,, Win
 	return WinExist(WinTitle . " ahk_id " . Win)
+}
+
+AdjustScreenBrightness(step) {
+    service := "winmgmts:{impersonationLevel=impersonate}!\\.\root\WMI"
+    monitors := ComObjGet(service).ExecQuery("SELECT * FROM WmiMonitorBrightness WHERE Active=TRUE") 
+    monMethods := ComObjGet(service).ExecQuery("SELECT * FROM wmiMonitorBrightNessMethods WHERE Active=TRUE")
+
+    for i in monitors { 
+        curt := i.CurrentBrightness
+        break 
+    }
+    toSet := curt + step
+    if (toSet > 100)
+        toSet := 100
+    if (toSet < 0)
+        toSet := 0
+
+    for i in monMethods {
+        i.WmiSetBrightness(1, toSet)
+        break
+    }
+
+    BrightnessOSD()
+}
+
+BrightnessOSD() {
+	static PostMessagePtr := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "user32.dll", "Ptr"), "AStr", A_IsUnicode ? "PostMessageW" : "PostMessageA", "Ptr")
+	 ,WM_SHELLHOOK := DllCall("RegisterWindowMessage", "Str", "SHELLHOOK", "UInt")
+	static FindWindow := DllCall("GetProcAddress", "Ptr", DllCall("GetModuleHandle", "Str", "user32.dll", "Ptr"), "AStr", A_IsUnicode ? "FindWindowW" : "FindWindowA", "Ptr")
+	HWND := DllCall(FindWindow, "Str", "NativeHWNDHost", "Str", "", "Ptr")
+	IF !(HWND) {
+		try IF ((shellProvider := ComObjCreate("{C2F03A33-21F5-47FA-B4BB-156362A2F239}", "{00000000-0000-0000-C000-000000000046}"))) {
+			try IF ((flyoutDisp := ComObjQuery(shellProvider, "{41f9d2fb-7834-4ab6-8b1b-73e74064b465}", "{41f9d2fb-7834-4ab6-8b1b-73e74064b465}"))) {
+				DllCall(NumGet(NumGet(flyoutDisp+0)+3*A_PtrSize), "Ptr", flyoutDisp, "Int", 0, "UInt", 0)
+				 ,ObjRelease(flyoutDisp)
+			}
+			ObjRelease(shellProvider)
+		}
+		HWND := DllCall(FindWindow, "Str", "NativeHWNDHost", "Str", "", "Ptr")
+	}
+	DllCall(PostMessagePtr, "Ptr", HWND, "UInt", WM_SHELLHOOK, "Ptr", 0x37, "Ptr", 0)
 }
 #If
 

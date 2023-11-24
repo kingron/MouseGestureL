@@ -71,4 +71,4 @@ MouseGestureL是一个极其强大的工具，并且资源消耗极低，只占�
 | CapsLock + C          | 在浏览器中，复制浏览器地址并解码URL                                                                | CapsLock + A          | 打开 ASCII 码表                                                                |
 | Ctrl + Win + G        | 随机密码生成                                                                             | CapsLock + N          | 打开记事本                                                                      |
 | CapsLock + Q          | 静音                                                                                 | Alt + 鼠标滚轮            | 调整当前窗口的透明度                                                                 |
-| Win + Shift + W       | 更换为墙纸为下一张必应每日墙纸                                                                    |                       |                                                                            |
+| Win + Shift + W       | 更换为墙纸为下一张必应每日墙纸                                                                    | 在任务栏Ctrl+滚动鼠标         | 调整屏幕亮度                                                                     |
