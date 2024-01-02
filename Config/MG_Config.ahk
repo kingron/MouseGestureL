@@ -259,7 +259,7 @@ MG_IsTarget1(){
 
 MG_IsTarget2(){
 	global
-	return ((MG_Exe="msedge.exe"))
+	return ((MG_Exe="msedge.exe") || (MG_Exe="chrome.exe"))
 }
 
 MG_IsTarget3(){
@@ -471,6 +471,7 @@ MG_Gesture_RB_616_:
 	if(MG_IsTarget2()){
 		;Generate Key Stroke
 		Send, ^#T
+		Send, ^+T
 	}else{
 		;Generate Key Stroke
 		Send, ^z
