@@ -257,8 +257,7 @@ GetAndSetBingWallpaper() {
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
 #m::Run "SumatraPDF-3.4.6-64.exe"
-;#^m::Run wmplayer.exe /playlist:music
-#^m::Run D:\Tools\Winamp\Winamp.exe
+#^m::Run wmplayer.exe /playlist:music
 #n::Run Notepad++
 #o::Run wifi.bat
 ; #p:: 显示器
@@ -285,8 +284,8 @@ GetAndSetBingWallpaper() {
 	if ErrorLevel
 		return
 
-;	Run, https://fanyi.baidu.com/#en/zh/%word%
-	Run, https://www.deepl.com/translator#en/zh/%word%
+	Run, https://fanyi.baidu.com/#en/zh/%word%
+;	Run, https://www.deepl.com/translator#en/zh/%word%
 ;  shell := ComObjCreate("WScript.Shell")
 ;  exec := shell.Exec("CScript.exe //Nologo D:\tools\gt.js """ . word . """")
 ;  text := exec.StdOut.ReadAll()
@@ -1165,6 +1164,7 @@ GetClientSize(hwnd, ByRef w, ByRef h)
     h := NumGet(rc, 12, "int")
 }
 
+CapsLock & g:: Reload /restart
 CapsLock & s::
 	InputBox, text, 内容, `n请输入要语音输出的内容,,400,180,,,,,学习时间到了，学习让人进步，学习让人快乐
 	if ErrorLevel
