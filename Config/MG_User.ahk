@@ -160,7 +160,7 @@ GetAndSetBingWallpaper() {
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
-#c::Run cmd.exe
+#c::Run,cmd.exe, % A_Desktop
 ; #d:: 最小化桌面
 ; Ctrl+Win+D，重复当前行
 #^d::
@@ -256,7 +256,7 @@ GetAndSetBingWallpaper() {
 	return
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
-#m::Run "SumatraPDF-3.4.6-64.exe"
+#m::Run "SumatraPDF.exe"
 #^m::Run wmplayer.exe /playlist:music
 #n::Run Notepad++
 #o::Run wifi.bat
