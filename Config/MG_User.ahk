@@ -160,7 +160,7 @@ GetAndSetBingWallpaper() {
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
-#c::Run,cmd.exe, % A_Desktop
+#c::Run cmd.exe, % A_Desktop
 ; #d:: 最小化桌面
 ; Ctrl+Win+D，重复当前行
 #^d::

@@ -249,7 +249,7 @@ Goto,MG_Config_End
 
 MG_IsDisable(){
 	global
-	return ((MG_StrComp(MG_Title, "GIMP", 4)) || (MG_Exe="vmplayer.exe") || (MG_StrComp(MG_Exe, "teamviewer.exe", 2)) || (MG_Exe="unity.exe") || (MG_Exe="xnview.exe") || (MG_StrComp(MG_Exe, "mstsc.exe", 2)) || (MG_WClass="ApplicationFrameWindow") || (MG_Exe="dstermserv.exe"))
+	return ((MG_StrComp(MG_Title, "GIMP", 4)) || (MG_Exe="vmplayer.exe") || (MG_StrComp(MG_Exe, "teamviewer.exe", 2)) || (MG_Exe="unity.exe") || (MG_Exe="xnview.exe") || (MG_StrComp(MG_Exe, "mstsc.exe", 2)) || (MG_WClass="ApplicationFrameWindow") || (MG_Exe="dstermserv.exe") || (MG_Exe="todesk.exe") || (MG_Exe="anydesk.exe"))
 }
 
 MG_IsTarget1(){

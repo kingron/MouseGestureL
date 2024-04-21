@@ -3457,5 +3457,5 @@ MG_EndOperation()
 
 MG_End:
 #NoEnv
-#Include %A_ScriptDir%\screenclipping.ahk
+Run %A_ScriptDir%\AutoHotkeyU32.exe %A_ScriptDir%\screenclipping.ahk
 #Include %A_ScriptDir%\Compass.ahk

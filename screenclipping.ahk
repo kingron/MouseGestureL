@@ -8,6 +8,7 @@ if((A_PtrSize=8&&A_IsCompiled="")||!A_IsUnicode){ ;32 bit=4  ;64 bit=8
     ExitApp
     return
 }
+#NoTrayIcon
 #SingleInstance, Force
 #^Lbutton::SCW_ScreenClip2Win(clip:=0,email:=0)  ;Win+Control+Left click- no copy to clipboard
 #!Lbutton::SCW_ScreenClip2Win(clip:=0,email:=1) ; Wind+Alt+left click =saves images and attach to email (path of jpg on clipboard)
