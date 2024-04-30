@@ -5,6 +5,8 @@ global cursorPID := 0
 global osdPID := 0
 global spyPID := 0
 global wallpaper := 0
+global hideWindows := []
+
 SetTimer, GetAndSetBingWallpaper, 3600000
 GetAndSetBingWallpaper()
 setTaskBarTransparent()
@@ -14,7 +16,7 @@ setTaskBarTransparent()
 RegRead DisabledHotkeys, HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced, DisabledHotkeys
 If (DisabledHotkeys = "") {
 	Run reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v DisabledHotkeys /d QWTUSFGHKCVM
-	MsgBox 关闭了系统默认热键设置(Win+Q/W/T/U/S/F/G/H/K/C/V/M)。`n请注销或者重启系统以便生效
+	MsgBox 0x41040,提示,关闭了系统默认热键设置(Win+Q/W/T/U/S/F/G/H/K/C/V/M)。`n请注销或者重启系统以便生效
 }
 goto End
 
@@ -372,7 +374,7 @@ GetAndSetBingWallpaper() {
 
 	SelectEngine:
 		if (A_GuiControl = "RadioVBS") {
-			MsgBox 使用VBS引擎时，最后返回值必须用 result = 赋值，例如 result = a + b，result = chr(65)等，否则不会输出结果。
+			MsgBox 0x41040,提示,使用VBS引擎时，最后返回值必须用 result = 赋值，例如 result = a + b，result = chr(65)等，否则不会输出结果。
 			ScriptEngine := 0
 		} else {
 			ScriptEngine := 1
@@ -428,6 +430,19 @@ GetAndSetBingWallpaper() {
         Sleep 10
         Send ^a
 		return
+#ESC::
+    hideWindows.push(WinExist("A"))
+    WinHide,A
+	return
+^#ESC::
+    if (hideWindows.Length() > 0) {
+		hwnd = % hideWindows.pop()
+        WinShow, ahk_id %hwnd%
+        WinActivate, ahk_id %hwnd%
+	} else {
+		MsgBox 0x41030,提示,没有隐藏窗口了
+	}
+	return
 #`::WinMinimize,A
 ; 等价于按数字小键盘 *
 #\::SendInput, {NumpadMult}
