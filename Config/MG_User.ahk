@@ -451,6 +451,8 @@ GetAndSetBingWallpaper() {
 #.::Run ScreenRuler\screenruler.exe
 #/::Run HxD.exe
 #'::Run, "C:\Program Files (x86)\WinSCP\WinSCP.exe"
+; 打开回收站
+#F11::Run ::{645FF040-5081-101B-9F08-00AA002F954E}
 ; Win+; = 表情输入框
 
 ;================ TransActive =====================
@@ -1179,7 +1181,7 @@ GetClientSize(hwnd, ByRef w, ByRef h)
     h := NumGet(rc, 12, "int")
 }
 
-CapsLock & g:: Reload /restart
+#F3:: Reload /restart
 CapsLock & s::
 	InputBox, text, 内容, `n请输入要语音输出的内容,,400,180,,,,,学习时间到了，学习让人进步，学习让人快乐
 	if ErrorLevel
