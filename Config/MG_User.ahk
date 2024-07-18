@@ -3,6 +3,7 @@
 global ontop := true
 global cursorPID := 0
 global osdPID := 0
+global winhole := 0
 global spyPID := 0
 global wallpaper := 0
 global hideWindows := []
@@ -173,7 +174,7 @@ GetAndSetBingWallpaper() {
 	return
 ; #e:: 资源管理器
 #f::Run hfs.exe
-#g::Run gost -C \Tools\gost.json
+#g::Run gost -C D:\Tools\gost.json
 ^#g::   ; 随机密码生成
     InputBox, length, 请输入随机密码字符串长度
     charset := "@~_?!$#%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@~_?!$#%"
@@ -245,7 +246,7 @@ GetAndSetBingWallpaper() {
 		Gui, Destroy
 		Reload
 	    return
-#i::Run compmgmt.msc
+#i::Run compmgmt.msc,,Max
 #j::Run "C:\Program Files\Git\git-bash.exe"
 #k::Run "putty.exe" @k3
 #^k::
@@ -255,6 +256,14 @@ GetAndSetBingWallpaper() {
 		Process, Close, %osdPID%
 		osdPID := 0
 	}
+	return
+#F1::
+;	if (winhole = 0) {
+		Run, %A_ScriptDir%\winhole.ahk,,,winhole
+;	} else {
+;		Process, Close, %winhole%
+;		winhole := 0
+;	}
 	return
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
