@@ -277,6 +277,7 @@ GetAndSetBingWallpaper() {
             Run wifi.bat
 	}
     return
+
 ; #p:: 显示器
 #q::
 	Process, Exist, msedge.exe
@@ -313,6 +314,7 @@ GetAndSetBingWallpaper() {
 ;  Gui Show, , %word% 翻译结果 (按ESC关闭)
 ;  GuiControl Focus, okButton
 	return
+#^q::PostMessage, 0x12, 0, 0,, A
 #+a::
 	WinGet, vWinList, List, ahk_class ApplicationFrameWindow
 	first := true
