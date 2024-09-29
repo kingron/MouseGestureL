@@ -248,7 +248,7 @@ GetAndSetBingWallpaper() {
 	    return
 #i::Run compmgmt.msc,,Max
 #j::Run "C:\Program Files\Git\git-bash.exe"
-#k::Run "putty.exe" @k3
+#k::Run "putty.exe" @gcp
 #^k::
 	if (osdPID = 0) {
 		Run, %A_ScriptDir%\KeypressOSD.ahk,,,osdPID
@@ -273,7 +273,7 @@ GetAndSetBingWallpaper() {
 #o::
     if (A_OSVersion >= "10.0") {
             ; Turn on/off WIFI hotspot
-            Run powershell -encodedCommand JABwAHIAbwBmAGkAbABlACAAPQAgAFsAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBDAG8AbgBuAGUAYwB0AGkAdgBpAHQAeQAuAE4AZQB0AHcAbwByAGsASQBuAGYAbwByAG0AYQB0AGkAbwBuACwAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBDAG8AbgBuAGUAYwB0AGkAdgBpAHQAeQAsAEMAbwBuAHQAZQBuAHQAVAB5AHAAZQA9AFcAaQBuAGQAbwB3AHMAUgB1AG4AdABpAG0AZQBdADoAOgBHAGUAdABJAG4AdABlAHIAbgBlAHQAQwBvAG4AbgBlAGMAdABpAG8AbgBQAHIAbwBmAGkAbABlACgAKQANAAoAJAB0AG0AIAA9ACAAWwBXAGkAbgBkAG8AdwBzAC4ATgBlAHQAdwBvAHIAawBpAG4AZwAuAE4AZQB0AHcAbwByAGsATwBwAGUAcgBhAHQAbwByAHMALgBOAGUAdAB3AG8AcgBrAE8AcABlAHIAYQB0AG8AcgBUAGUAdABoAGUAcgBpAG4AZwBNAGEAbgBhAGcAZQByACwAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBOAGUAdAB3AG8AcgBrAE8AcABlAHIAYQB0AG8AcgBzACwAQwBvAG4AdABlAG4AdABUAHkAcABlAD0AVwBpAG4AZABvAHcAcwBSAHUAbgB0AGkAbQBlAF0AOgA6AEMAcgBlAGEAdABlAEYAcgBvAG0AQwBvAG4AbgBlAGMAdABpAG8AbgBQAHIAbwBmAGkAbABlACgAJABwAHIAbwBmAGkAbABlACkADQAKAGkAZgAgACgAJAB0AG0ALgBUAGUAdABoAGUAcgBpAG4AZwBPAHAAZQByAGEAdABpAG8AbgBhAGwAUwB0AGEAdABlACAALQBlAHEAIAAxACkAIAB7AA0ACgAgACAAIAAgACQAdABtAC4AUwB0AG8AcABUAGUAdABoAGUAcgBpAG4AZwBBAHMAeQBuAGMAKAApACAAfAAgAE8AdQB0AC0ATgB1AGwAbAANAAoAfQAgAGUAbABzAGUAIAB7AA0ACgAgACAAIAAgACQAdABtAC4AUwB0AGEAcgB0AFQAZQB0AGgAZQByAGkAbgBnAEEAcwB5AG4AYwAoACkAIAB8ACAATwB1AHQALQBOAHUAbABsAA0ACgB9AA==
+            Run powershell -encodedCommand JABwAHIAbwBmAGkAbABlACAAPQAgAFsAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBDAG8AbgBuAGUAYwB0AGkAdgBpAHQAeQAuAE4AZQB0AHcAbwByAGsASQBuAGYAbwByAG0AYQB0AGkAbwBuACwAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBDAG8AbgBuAGUAYwB0AGkAdgBpAHQAeQAsAEMAbwBuAHQAZQBuAHQAVAB5AHAAZQA9AFcAaQBuAGQAbwB3AHMAUgB1AG4AdABpAG0AZQBdADoAOgBHAGUAdABJAG4AdABlAHIAbgBlAHQAQwBvAG4AbgBlAGMAdABpAG8AbgBQAHIAbwBmAGkAbABlACgAKQAKACQAdABtACAAPQAgAFsAVwBpAG4AZABvAHcAcwAuAE4AZQB0AHcAbwByAGsAaQBuAGcALgBOAGUAdAB3AG8AcgBrAE8AcABlAHIAYQB0AG8AcgBzAC4ATgBlAHQAdwBvAHIAawBPAHAAZQByAGEAdABvAHIAVABlAHQAaABlAHIAaQBuAGcATQBhAG4AYQBnAGUAcgAsAFcAaQBuAGQAbwB3AHMALgBOAGUAdAB3AG8AcgBrAGkAbgBnAC4ATgBlAHQAdwBvAHIAawBPAHAAZQByAGEAdABvAHIAcwAsAEMAbwBuAHQAZQBuAHQAVAB5AHAAZQA9AFcAaQBuAGQAbwB3AHMAUgB1AG4AdABpAG0AZQBdADoAOgBDAHIAZQBhAHQAZQBGAHIAbwBtAEMAbwBuAG4AZQBjAHQAaQBvAG4AUAByAG8AZgBpAGwAZQAoACQAcAByAG8AZgBpAGwAZQApAAoAaQBmACAAKAAkAHQAbQAuAFQAZQB0AGgAZQByAGkAbgBnAE8AcABlAHIAYQB0AGkAbwBuAGEAbABTAHQAYQB0AGUAIAAtAGUAcQAgADEAKQAgAHsACgAgACAAIAAgACQAdABtAC4AUwB0AG8AcABUAGUAdABoAGUAcgBpAG4AZwBBAHMAeQBuAGMAKAApACAAfAAgAE8AdQB0AC0ATgB1AGwAbAAKACAAIAAgACAAZQBjAGgAbwAgACIASABvAHQAcwBwAG8AdAAgAHMAdABvAHAAcABlAGQAIgAKACAAIAAgACAAcwBsAGUAZQBwACAAMwAKAH0AIABlAGwAcwBlACAAewAKACAAIAAgACAAJAB0AG0ALgBTAHQAYQByAHQAVABlAHQAaABlAHIAaQBuAGcAQQBzAHkAbgBjACgAKQAgAHwAIABPAHUAdAAtAE4AdQBsAGwACgAgACAAIAAgAGUAYwBoAG8AIAAiAEgAbwB0AHMAcABvAHQAIABzAHQAYQByAHQAZQBkACIACgAgACAAIAAgAHMAbABlAGUAcAAgADMACgB9AA==
 	} else {
             Run wifi.bat
 	}
@@ -1400,4 +1400,57 @@ drawAscii(hWnd, w, h) {
 	Gdip_DeleteGraphics(graphics), Gdip_DisposeImage(pBitmap), DeleteObject(hBitmap)
 	Gdip_Shutdown("pToken")
 }
+
+#!x::
+	#include gdip.ahk
+	#include ocr.ahk
+
+	SysGet, xPrimary, 76  ; 获取主屏幕左上角X坐标
+	SysGet, yPrimary, 77  ; 获取主屏幕左上角Y坐标
+	SysGet, wScreen, 78   ; 获取屏幕宽度
+	SysGet, hScreen, 79   ; 获取屏幕高度
+
+	pToken := Gdip_Startup()
+	mskSize = 20
+
+	; 获取整个屏幕的截图
+	hBitmap := HBitmapFromScreen(xPrimary, yPrimary, wScreen, hScreen)
+	pBitmap := Gdip_CreateBitmapFromHBITMAP(hBitmap)
+	pBitmapOut := Gdip_CreateBitmap(wScreen, hScreen)
+	Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
+
+	Gui, Msk:New, +LastFound +AlwaysOnTop +ToolWindow -Caption
+	Gui, Msk:Show, x0 y0 w%wScreen% h%hScreen%, 马赛克
+	hWnd := WinExist()
+	hdc := GetDC(hWnd)
+
+	; 绘制马赛克后的位图到窗口
+	graphics := Gdip_GraphicsFromHDC(hdc)
+	Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
+return
+
+#IfWinActive, 马赛克 ahk_class AutoHotkeyGUI
+	WheelUp::
+		mskSize := (mskSize - 5 < 5) ? 5 : mskSize - 5
+		Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
+		Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
+		return
+	WheelDown::
+		mskSize := mskSize + 5 > 50 ? 50 : mskSize + 5
+		Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
+		Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
+	return
+#If
+
+MskGuiEscape:
+MskGuiClose:
+MskGuiCancel:
+	Gdip_DeleteGraphics(graphics)
+	Gdip_DisposeImage(pBitmapOut)
+	Gdip_DisposeImage(pBitmap)
+	Gdip_Shutdown(pToken)
+	DeleteObject(hBitmap)
+	Gui, Destroy
+	return
+
 End:
