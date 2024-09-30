@@ -839,10 +839,35 @@ Cancel:
 	Gui Destroy
 	return
 
+GetStringInfo(str, ByRef lineCount, ByRef maxLength)
+{
+    lines := StrSplit(str, "`n")
+    lineCount := lines.MaxIndex()  ; 获取总行数
+    maxLength := 0
+
+    for index, line in lines
+    {
+        line := StrReplace(line, "`r")  ; 移除回车符
+        currentByteLength := 0
+        Loop, Parse, line
+        {
+            char := A_LoopField
+            if (Asc(char) < 128)
+                currentByteLength += 1  ; 英文字符为1字节
+            else
+                currentByteLength += 2  ; 中文字符或非ASCII字符为2字节
+        }
+        if (currentByteLength > maxLength)
+            maxLength := currentByteLength
+    }
+}
+
 OSD(text)
 {
+	GetStringInfo(text, lineCount, maxLength)
+	width := (maxLength + 4) * 15
 	; borderless, no progressbar, font size 25, color text 009900
-	Progress, hide Y800 W1000 b zh0 cw000000 FM20 CT00BB00,, %text%, AutoHotKeyProgressBar, 微软雅黑
+	Progress, hide Y800 W%width% b zh0 cw000000 FM20 CT00BB00,, %text%, AutoHotKeyProgressBar, 微软雅黑
 	Progress, show
 	WinSet, Transparent, 200, AutoHotKeyProgressBar
 	;WinSet, TransColor, 000000 200, AutoHotKeyProgressBar
@@ -1401,6 +1426,7 @@ drawAscii(hWnd, w, h) {
 	Gdip_Shutdown("pToken")
 }
 
+#MButton::
 #!x::
 	#include gdip.ahk
 	#include ocr.ahk
@@ -1411,7 +1437,7 @@ drawAscii(hWnd, w, h) {
 	SysGet, hScreen, 79   ; 获取屏幕高度
 
 	pToken := Gdip_Startup()
-	mskSize = 20
+	mskSize = 30
 
 	; 获取整个屏幕的截图
 	hBitmap := HBitmapFromScreen(xPrimary, yPrimary, wScreen, hScreen)
@@ -1430,13 +1456,15 @@ drawAscii(hWnd, w, h) {
 return
 
 #IfWinActive, 马赛克 ahk_class AutoHotkeyGUI
+	MButton::
+		Send, {Esc}
 	WheelUp::
 		mskSize := (mskSize - 5 < 5) ? 5 : mskSize - 5
 		Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
 		Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
 		return
 	WheelDown::
-		mskSize := mskSize + 5 > 50 ? 50 : mskSize + 5
+		mskSize := mskSize + 5 > 100 ? 100 : mskSize + 5
 		Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
 		Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
 	return
@@ -1451,6 +1479,19 @@ MskGuiCancel:
 	Gdip_Shutdown(pToken)
 	DeleteObject(hBitmap)
 	Gui, Destroy
+	return
+
+~CapsLock::
+    status := GetKeyState("CapsLock", "T") ? "On" : "Off"
+	OSD("CapsLock " . status)
+	return
+~NumLock::
+    status := GetKeyState("NumLock", "T") ? "On" : "Off"
+	OSD("NumLock " . status)
+	return
+~ScrollLock::
+    status := GetKeyState("ScrollLock", "T") ? "On" : "Off"
+	OSD("ScrollLock " . status)
 	return
 
 End:
