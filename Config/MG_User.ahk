@@ -472,7 +472,6 @@ GetAndSetBingWallpaper() {
     return
 #.::Run ScreenRuler\screenruler.exe
 #/::Run HxD.exe
-#'::Run, "C:\Program Files (x86)\WinSCP\WinSCP.exe"
 ; 打开回收站
 #F11::Run ::{645FF040-5081-101B-9F08-00AA002F954E}
 ; Win+; = 表情输入框
@@ -1493,5 +1492,25 @@ MskGuiCancel:
     status := GetKeyState("ScrollLock", "T") ? "On" : "Off"
 	OSD("ScrollLock " . status)
 	return
+#Insert::
+	; InputBox, word, 单词, `n使用百度进行翻译。`n请输入要翻译的内容，可以是句子或者单词,,400,180,,,,,%def%
+	InputBox, TimeInput, 倒计时, 请输入倒计时时间`n输入格式: HH:MM:SS,, 200, 142,,,,,%TimeInput%
+	if (ErrorLevel) {
+		return
+	}
+	
+	RegExMatch(TimeInput, "^(\d{1,2}):(\d{1,2}):(\d{1,2})$", match)
+	if !match {
+		return
+	}
+	TotalSeconds := (match1 * 3600) + (match2 * 60) + match3
+	FormatTime, StartTime,, yyyy-MM-dd HH:mm:ss
+	SetTimer, TimerDone, -%TotalSeconds%000
+	return
+TimerDone:
+	FormatTime, now,, yyyy-MM-dd HH:mm:ss
+    showMessage("提示", "倒计时 " . TimeInput . " 结果`n开始: " . StartTime . "`n结束: " . now)
+    ComObjCreate("SAPI.SpVoice").Speak("倒计时已结束")
+return
 
 End:
