@@ -1479,10 +1479,10 @@ MskGuiCancel:
 	Gui, Destroy
 	return
 
-~CapsLock::
-    status := GetKeyState("CapsLock", "T") ? "On" : "Off"
-	OSD("CapsLock " . status)
-	return
+; ~CapsLock::
+    ; status := GetKeyState("CapsLock", "T") ? "On" : "Off"
+	; OSD("CapsLock " . status)
+	; return
 ~NumLock::
     status := GetKeyState("NumLock", "T") ? "On" : "Off"
 	OSD("NumLock " . status)
