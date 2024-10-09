@@ -268,7 +268,6 @@ GetAndSetBingWallpaper() {
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
 #m::Run "SumatraPDF.exe"
-#^m::Run wmplayer.exe /playlist:music
 #n::Run Notepad++
 #o::
     if (A_OSVersion >= "10.0") {
