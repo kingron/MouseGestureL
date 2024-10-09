@@ -1492,7 +1492,6 @@ MskGuiCancel:
 	OSD("ScrollLock " . status)
 	return
 #Insert::
-	; InputBox, word, 单词, `n使用百度进行翻译。`n请输入要翻译的内容，可以是句子或者单词,,400,180,,,,,%def%
 	InputBox, TimeInput, 倒计时, 请输入倒计时时间`n输入格式: HH:MM:SS,, 200, 142,,,,,%TimeInput%
 	if (ErrorLevel) {
 		return
@@ -1511,5 +1510,20 @@ TimerDone:
     showMessage("提示", "倒计时 " . TimeInput . " 结果`n开始: " . StartTime . "`n结束: " . now)
     ComObjCreate("SAPI.SpVoice").Speak("倒计时已结束")
 return
+
+overTitleBar() { ; https://www.autohotkey.com/boards/viewtopic.php?p=145245#p145245
+ ; https://www.autohotkey.com/boards/viewtopic.php?p=435006#p435006
+ CoordMode, Mouse
+ MouseGetPos, x, y, hWnd
+ SendMessage, WM_NCHITTEST := 0x84, 0, x | y << 16,, ahk_id %hWnd%
+ Return ErrorLevel = HTCAPTION := 2
+}
+
+#If overTitleBar()
+MButton:: ; middle click
+    Send, {LButton}
+    Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
+Return
+#If
 
 End:
