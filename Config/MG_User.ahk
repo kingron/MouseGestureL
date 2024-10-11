@@ -1077,7 +1077,7 @@ WheelDown::Send {Volume_Down}
 ; 任务栏 Ctrl + 鼠标滚动，调整屏幕亮度
 ^WheelUp:: AdjustScreenBrightness(5)
 ^WheelDown:: AdjustScreenBrightness(-5)
-
+MButton:: SendInput {Media_Play_Pause}
 MouseIsOver(WinTitle) {
 	MouseGetPos,,, Win
 	return WinExist(WinTitle . " ahk_id " . Win)
@@ -1185,6 +1185,8 @@ ProcessChineseChars(string)
 ; *^LAlt::^AppsKey
 #IfWinActive
 
+~LButton & WheelUp:: Send {Media_Prev}
+~LButton & WheelDown:: Send {Media_Next}
 CapsLock & q:: SendInput {Volume_Mute}
 CapsLock & w:: SendInput {Media_Play_Pause}
 CapsLock & r:: SendInput {Media_Prev}
