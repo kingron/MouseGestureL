@@ -339,7 +339,7 @@ GetAndSetBingWallpaper() {
 	return
 ; #r:: 运行
 ; #s:: Everything
-RButton & MButton::
+~RButton & MButton::
 #t::
 	WinSet,TopMost,,A
 	return
