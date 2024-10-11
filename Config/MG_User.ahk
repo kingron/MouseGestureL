@@ -339,7 +339,10 @@ GetAndSetBingWallpaper() {
 	return
 ; #r:: 运行
 ; #s:: Everything
-#t::WinSet,TopMost,,A
+RButton & MButton::
+#t::
+	WinSet,TopMost,,A
+	return
 ; #u:: 辅助工具
 ; #v:: 剪切板
 ; Ctrl+Shift+V，粘贴为纯文本
