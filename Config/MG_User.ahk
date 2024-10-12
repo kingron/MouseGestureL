@@ -1073,6 +1073,8 @@ PrintScreen::
 
 ; 鼠标在任务栏滚动调整音量
 #If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
+LButton & WheelUp:: Send !+{tab}
+LButton & WheelDown:: Send !{Tab}
 WheelUp:: Send {Volume_Up}
 WheelDown:: Send {Volume_Down}
 ; 任务栏 Ctrl + 鼠标滚动，调整屏幕亮度
