@@ -339,6 +339,7 @@ GetAndSetBingWallpaper() {
 	return
 ; #r:: 运行
 ; #s:: Everything
+^MButton::
 ~LButton & MButton::
 #t::
 	WinSet,TopMost,,A
@@ -1075,12 +1076,14 @@ PrintScreen::
 
 ; 鼠标在任务栏滚动调整音量
 #If MouseIsOver("ahk_class Shell_TrayWnd") || MouseIsOver("ahk_class Shell_SecondaryTrayWnd")
-WheelUp::Send {Volume_Up}
-WheelDown::Send {Volume_Down}
+WheelUp:: Send {Volume_Up}
+WheelDown:: Send {Volume_Down}
 ; 任务栏 Ctrl + 鼠标滚动，调整屏幕亮度
 ^WheelUp:: AdjustScreenBrightness(5)
 ^WheelDown:: AdjustScreenBrightness(-5)
-MButton:: SendInput {Media_Play_Pause}
+^MButton:: Send {Media_Next}
+!MButton:: Send {Media_Prev}
+MButton:: Send {Media_Play_Pause}
 MouseIsOver(WinTitle) {
 	MouseGetPos,,, Win
 	return WinExist(WinTitle . " ahk_id " . Win)
@@ -1530,5 +1533,19 @@ MButton:: ; middle click
     Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
 Return
 #If
-
+!MButton::
+	InputBox, WinSize, 调整窗口大小, `n请输入窗口大小（例如 1024x768）,,300,150,,,,,1024x768
+	if (ErrorLevel)
+		return
+	if RegExMatch(WinSize, "^\d{1,4}x\d{1,4}$") {
+		StringSplit, size, WinSize, x  ; 拆分输入为宽度和高度
+		WinGet,M,MinMax,A
+		if( M != 0 )
+			WinRestore,A
+		WinMove, A,,,,size1, size2
+	} else {
+		OSD("请输入类似 '800x600' 的格式")
+	}
+	return
+	
 End:
