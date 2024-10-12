@@ -736,6 +736,7 @@ CapsLock & d::
 
 ; 资源管理器中，按 Ctrl+Shift+C，复制文件名
 #IfWinActive ahk_exe explorer.exe
+MButton::Send !{Up}
 ^+c::
 	send ^c
 	sleep,200
