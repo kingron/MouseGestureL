@@ -1529,9 +1529,33 @@ overTitleBar() { ; https://www.autohotkey.com/boards/viewtopic.php?p=145245#p145
 
 #If overTitleBar()
 MButton:: ; middle click
-    Send, {LButton}
-    Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
-Return
+	Send, {LButton}
+	Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
+	Return
+^WheelDown::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w + 50,
+	return
++WheelDown::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,, h + 50
+	return
+^+WheelDown::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w + 50,h + 50
+	return
+^WheelUp::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w - 50,
+	return
++WheelUp::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,,h - 50
+	return
+^+WheelUp::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w - 50,h - 50
+	return
 #If
 !MButton::
 	InputBox, WinSize, 调整窗口大小, `n请输入窗口大小（例如 1024x768）,,300,150,,,,,1024x768
