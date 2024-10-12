@@ -21,14 +21,10 @@ If (DisabledHotkeys = "") {
 }
 goto End
 
-#+w::
-    GetAndSetBingWallpaper()
-    return
+#+w::GetAndSetBingWallpaper()
 ; 获取并设置Bing壁纸函数
 GetAndSetBingWallpaper() {
     FileCreateDir, Wallpaper
-    ; 获取Bing壁纸的URL
-    ; https://bing.angustar.com/api/list?count=1&date=20230101
     URLDownload := "https://www.bing.com/HPImageArchive.aspx?format=js&idx=" . wallpaper . "&n=1"
     wallpaper := wallpaper + 1
     if (wallpaper >= 7) {
@@ -44,10 +40,8 @@ GetAndSetBingWallpaper() {
     if (BingData == "") {
         return
     }
-;    ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_1920x1080.jpg"
     ImageFile := "Wallpaper\" . RegExReplace(BingData, ".*""urlbase"":""\/th\?id=([^""]*).*", "$1") . "_UHD.jpg"
     if (!FileExist(ImageFile)) {
-;        ImageURL := RegExReplace(BingData, ".*""url"":""([^""]*).*", "$1")
         ImageURL := RegExReplace(BingData, ".*""urlbase"":""([^""]*).*", "$1") . "_UHD.jpg"
         ImageTitle := RegExReplace(BingData, ".*""title"":""([^""]*).*", "$1")
         ImageCopyright := RegExReplace(BingData, ".*""copyright"":""([^""]*).*", "$1")
@@ -176,8 +170,10 @@ GetAndSetBingWallpaper() {
 #f::Run hfs.exe
 #g::Run gost -C D:\Tools\gost.json
 ^#g::   ; 随机密码生成
-    InputBox, length, 请输入随机密码字符串长度
-    charset := "@~_?!$#%0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@~_?!$#%"
+    InputBox, length, 随机密码, `n请输入随机密码字符串长度,,300,150,,,,,10
+	if (ErrorLevel)
+		return
+    charset := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~!@#$%^&*()+-|{}[]\;`':<>,.?/"
     password := ""
     if (length > 0) {
         Loop, %length% {
@@ -340,7 +336,6 @@ GetAndSetBingWallpaper() {
 ; #r:: 运行
 ; #s:: Everything
 ^MButton::
-~LButton & MButton::
 #t::
 	WinSet,TopMost,,A
 	return
@@ -464,6 +459,7 @@ GetAndSetBingWallpaper() {
 		MsgBox 0x41030,提示,没有隐藏窗口了
 	}
 	return
+~LButton & MButton::WinMinimize, A
 #`::WinMinimize,A
 ; 等价于按数字小键盘 *
 #\::SendInput, {NumpadMult}
@@ -1528,6 +1524,7 @@ overTitleBar() { ; https://www.autohotkey.com/boards/viewtopic.php?p=145245#p145
 }
 
 #If overTitleBar()
+~LButton & MButton::WinSet,TopMost,,A
 MButton:: ; middle click
 	Send, {LButton}
 	Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
@@ -1571,5 +1568,4 @@ MButton:: ; middle click
 		OSD("请输入类似 '800x600' 的格式")
 	}
 	return
-	
 End:
