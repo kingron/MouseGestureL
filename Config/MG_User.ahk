@@ -1496,6 +1496,8 @@ MskGuiCancel:
 	OSD("ScrollLock " . status)
 	return
 #Insert::
+	if (!TimeInput)
+		TimeInput := "00:05:00"
 	InputBox, TimeInput, 倒计时, 请输入倒计时时间`n输入格式: HH:MM:SS,, 200, 142,,,,,%TimeInput%
 	if (ErrorLevel) {
 		return
@@ -1555,7 +1557,9 @@ MButton:: ; middle click
 	return
 #If
 !MButton::
-	InputBox, WinSize, 调整窗口大小, `n请输入窗口大小（例如 1024x768）,,300,150,,,,,1024x768
+	if (!WinSize)
+		WinSize := "1024x768"
+	InputBox, WinSize, 调整窗口大小, `n请输入窗口大小（例如 1024x768）,,300,150,,,,,%WinSize%
 	if (ErrorLevel)
 		return
 	if RegExMatch(WinSize, "^\d{1,4}x\d{1,4}$") {
