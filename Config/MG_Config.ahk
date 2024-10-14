@@ -272,27 +272,13 @@ MG_IsTarget4(){
 	return ((MG_Exe="winword.exe"))
 }
 
-
-MG_Gesture_MB_U_:
-	;Generate Key Stroke
-	Send, {PgUp}
+MG_Gesture_RB_8_:
+	;Jump to Top
+	Send,^{Home}
 return
 
-MG_GetAction_MB_U_:
-	MG_ActionStr := "Generate Key Stroke"
-return
-
-MG_Gesture_RB_:
-	PostMessage, 0x001F, 0, 0
-	PostMessage, 0x001F, 0, 0, , ahk_id %MG_HCTL%
-	IfWinNotActive
-	{
-		WinActivate
-	}
-return
-
-MG_GetAction_RB_:
-	MG_ActionStr := "PostMessage, 0x001F, 0, 0"
+MG_GetAction_RB_8_:
+	MG_ActionStr := "Jump to Top"
 return
 
 MG_Gesture_RB_2_:
@@ -304,15 +290,6 @@ MG_GetAction_RB_2_:
 	MG_ActionStr := "Jump to Bottom"
 return
 
-MG_Gesture_RB_28_:
-	;Generate Key Stroke
-	Send, ^w
-return
-
-MG_GetAction_RB_28_:
-	MG_ActionStr := "Generate Key Stroke"
-return
-
 MG_Gesture_RB_4_:
 	;Back
 	Send,!{Left}
@@ -320,47 +297,6 @@ return
 
 MG_GetAction_RB_4_:
 	MG_ActionStr := "Back"
-return
-
-MG_Gesture_RB_26_:
-	;Generate Key Stroke
-	Send, +^l
-return
-
-MG_GetAction_RB_26_:
-	MG_ActionStr := "Generate Key Stroke"
-return
-
-MG_Gesture_RB_LB__:
-	if(MG_IsTarget2()){
-		;Generate Key Stroke
-		Send, ^w
-	}else if(MG_IsTarget3()){
-		;Generate Key Stroke
-		Send, ^{F4}
-	}else{
-		;Close Window
-		WinClose
-	}
-return
-
-MG_GetAction_RB_LB__:
-	if(MG_IsTarget2()){
-		MG_ActionStr := "Generate Key Stroke"
-	}else if(MG_IsTarget3()){
-		MG_ActionStr := "Generate Key Stroke"
-	}else{
-		MG_ActionStr := "Close Window"
-	}
-return
-
-MG_Gesture_RB_9_:
-	;Maximize Window
-	WinMaximize
-return
-
-MG_GetAction_RB_9_:
-	MG_ActionStr := "Maximize Window"
 return
 
 MG_Gesture_RB_6_:
@@ -372,22 +308,68 @@ MG_GetAction_RB_6_:
 	MG_ActionStr := "Forward"
 return
 
-MG_Gesture_RB_62_:
-	;Minimize Window
-	WinMinimize
+MG_Gesture_RB_9_:
+	WinMaximize
 return
 
-MG_GetAction_RB_62_:
-	MG_ActionStr := "Minimize Window"
+MG_GetAction_RB_9_:
+	MG_ActionStr := "WinMaximize"
 return
 
 MG_Gesture_RB_1_:
-	;Minimize Window
 	WinMinimize
 return
 
 MG_GetAction_RB_1_:
-	MG_ActionStr := "Minimize Window"
+	MG_ActionStr := "WinMinimize"
+return
+
+MG_Gesture_RB_7_:
+	if(MG_IsTarget2()){
+		Send, ^+T
+	}else{
+		Send, ^z
+	}
+return
+
+MG_GetAction_RB_7_:
+	if(MG_IsTarget2()){
+		MG_ActionStr := "Send, ^+T"
+	}else{
+		MG_ActionStr := "Send, ^z"
+	}
+return
+
+MG_Gesture_RB_3_:
+	WinSet, Bottom,, A
+return
+
+MG_GetAction_RB_3_:
+	MG_ActionStr := "WinSet, Bottom,, A"
+return
+
+MG_Gesture_RB_28_:
+	if(MG_IsTarget2()){
+		Send, ^T
+	}else{
+		Send, ^w
+	}
+return
+
+MG_GetAction_RB_28_:
+	if(MG_IsTarget2()){
+		MG_ActionStr := "Send, ^T"
+	}else{
+		MG_ActionStr := "Send, ^w"
+	}
+return
+
+MG_Gesture_RB_82_:
+	Send, {F5}
+return
+
+MG_GetAction_RB_82_:
+	MG_ActionStr := "Send, {F5}"
 return
 
 MG_Gesture_RB_68_:
@@ -399,27 +381,62 @@ MG_GetAction_RB_68_:
 	MG_ActionStr := "Maximize Window"
 return
 
-MG_Gesture_RB_8_:
-	;Jump to Top
-	Send,^{Home}
+MG_Gesture_RB_62_:
+	;Minimize Window
+	WinMinimize
 return
 
-MG_GetAction_RB_8_:
-	MG_ActionStr := "Jump to Top"
+MG_GetAction_RB_62_:
+	MG_ActionStr := "Minimize Window"
 return
 
-MG_Gesture_RB_82_:
+MG_Gesture_RB_26_:
 	;Generate Key Stroke
-	Send, {F5}
+	Send, +^l
 return
 
-MG_GetAction_RB_82_:
+MG_GetAction_RB_26_:
 	MG_ActionStr := "Generate Key Stroke"
+return
+
+MG_Gesture_MB_8_:
+	Send, {PgUp}
+return
+
+MG_GetAction_MB_8_:
+	MG_ActionStr := "Send, {PgUp}"
+return
+
+MG_Gesture_MB_2_:
+	Send, {PgDn}
+return
+
+MG_GetAction_MB_2_:
+	MG_ActionStr := "Send, {PgDn}"
+return
+
+MG_Gesture_RB_LB__:
+	if(MG_IsTarget2()){
+		Send, ^w
+	}else if(MG_IsTarget3()){
+		Send, ^{F4}
+	}else{
+		WinClose
+	}
+return
+
+MG_GetAction_RB_LB__:
+	if(MG_IsTarget2()){
+		MG_ActionStr := "Send, ^w"
+	}else if(MG_IsTarget3()){
+		MG_ActionStr := "Send, ^{F4}"
+	}else{
+		MG_ActionStr := "WinClose"
+	}
 return
 
 MG_Gesture_RB_WD_:
 	if(MG_IsTarget2()){
-		;Generate Key Stroke
 		Send, ^{Tab}
 	}else{
 		;Win+Tab
@@ -433,7 +450,7 @@ return
 
 MG_GetAction_RB_WD_:
 	if(MG_IsTarget2()){
-		MG_ActionStr := "Generate Key Stroke"
+		MG_ActionStr := "Send, ^{Tab}"
 	}else{
 		MG_ActionStr := "Win+Tab"
 	}
@@ -441,7 +458,6 @@ return
 
 MG_Gesture_RB_WU_:
 	if(MG_IsTarget2()){
-		;Generate Key Stroke
 		Send, +^{Tab}
 	}else{
 		;Win+Shift+Tab
@@ -461,29 +477,23 @@ return
 
 MG_GetAction_RB_WU_:
 	if(MG_IsTarget2()){
-		MG_ActionStr := "Generate Key Stroke"
+		MG_ActionStr := "Send, +^{Tab}"
 	}else{
 		MG_ActionStr := "Win+Shift+Tab"
 	}
 return
 
-MG_Gesture_RB_616_:
-	if(MG_IsTarget2()){
-		;Generate Key Stroke
-		Send, ^#T
-		Send, ^+T
-	}else{
-		;Generate Key Stroke
-		Send, ^z
+MG_Gesture_RB_:
+	PostMessage, 0x001F, 0, 0
+	PostMessage, 0x001F, 0, 0, , ahk_id %MG_HCTL%
+	IfWinNotActive
+	{
+		WinActivate
 	}
 return
 
-MG_GetAction_RB_616_:
-	if(MG_IsTarget2()){
-		MG_ActionStr := "Generate Key Stroke"
-	}else{
-		MG_ActionStr := "Generate Key Stroke"
-	}
+MG_GetAction_RB_:
+	MG_ActionStr := "PostMessage, 0x001F, 0, 0"
 return
 
 

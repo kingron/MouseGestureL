@@ -336,9 +336,7 @@ GetAndSetBingWallpaper() {
 ; #r:: 运行
 ; #s:: Everything
 ^MButton::
-#t::
-	WinSet,TopMost,,A
-	return
+#t:: WinSet,TopMost,,A
 ; #u:: 辅助工具
 ; #v:: 剪切板
 ; Ctrl+Shift+V，粘贴为纯文本
@@ -600,14 +598,12 @@ CapsLock & d::
     Return
 
 ^CapsLock::
-;	if (A_PriorHotkey == "CapsLock" and A_TimeSincePriorHotkey < 200) {
-		if (cursorPID == 0) {
-			Run, %A_ScriptDir%\cursorhighlight.ahk,,,cursorPID
-		} else {
-			Process, Close, %cursorPID%
-			cursorPID := 0
-		}
-;	}
+	if (cursorPID == 0) {
+		Run, %A_ScriptDir%\cursorhighlight.ahk,,,cursorPID
+	} else {
+		Process, Close, %cursorPID%
+		cursorPID := 0
+	}
 	return
 
 ; 下面会导致长按 Alt 有问题，暂时去掉
@@ -736,11 +732,18 @@ CapsLock & d::
 
 ; 资源管理器中，按 Ctrl+Shift+C，复制文件名
 #IfWinActive ahk_exe explorer.exe
-MButton::Send !{Up}
+MButton:: 
+	if (overTitleBar()) {
+		Send, {LButton}
+		Send, {LWin down}{Shift down}{Right}{Right up}{Shift up}{LWin up}
+	} else {
+		Send !{Up}
+	}
+	return
 ^+c::
 	send ^c
 	sleep,200
-	clipboard = %clipboard% ;%null%
+	clipboard = %clipboard%
 	tooltip,%clipboard%
 	sleep, 2000
 	tooltip,
@@ -1473,7 +1476,7 @@ return
 		Gdip_PixelateBitmap(pBitmap, pBitmapOut, mskSize)
 		Gdip_DrawImage(graphics, pBitmapOut, 0, 0, wScreen, hScreen)
 	return
-#If
+#IfWinActive
 
 MskGuiEscape:
 MskGuiClose:
