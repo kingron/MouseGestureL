@@ -272,6 +272,11 @@ MG_IsTarget4(){
 	return ((MG_Exe="winword.exe"))
 }
 
+MG_IsTarget5(){
+	global
+	return ((MG_Exe="outlook.exe"))
+}
+
 MG_Gesture_RB_8_:
 	;Jump to Top
 	Send,^{Home}
@@ -326,7 +331,7 @@ return
 
 MG_Gesture_RB_7_:
 	if(MG_IsTarget2()){
-		Send, ^+T
+		Send, ^+t
 	}else{
 		Send, ^z
 	}
@@ -334,7 +339,7 @@ return
 
 MG_GetAction_RB_7_:
 	if(MG_IsTarget2()){
-		MG_ActionStr := "Send, ^+T"
+		MG_ActionStr := "Send, ^+t"
 	}else{
 		MG_ActionStr := "Send, ^z"
 	}
@@ -350,7 +355,7 @@ return
 
 MG_Gesture_RB_28_:
 	if(MG_IsTarget2()){
-		Send, ^T
+		Send, ^t
 	}else{
 		Send, ^w
 	}
@@ -358,7 +363,7 @@ return
 
 MG_GetAction_RB_28_:
 	if(MG_IsTarget2()){
-		MG_ActionStr := "Send, ^T"
+		MG_ActionStr := "Send, ^t"
 	}else{
 		MG_ActionStr := "Send, ^w"
 	}
@@ -413,6 +418,22 @@ return
 
 MG_GetAction_MB_2_:
 	MG_ActionStr := "Send, {PgDn}"
+return
+
+MG_Gesture_MB_4_:
+	Send,#+{Left}
+return
+
+MG_GetAction_MB_4_:
+	MG_ActionStr := "Send,#+{Left}"
+return
+
+MG_Gesture_MB_6_:
+	Send,#+{Right}
+return
+
+MG_GetAction_MB_6_:
+	MG_ActionStr := "Send,#+{Right}"
 return
 
 MG_Gesture_RB_LB__:
@@ -494,6 +515,48 @@ return
 
 MG_GetAction_RB_:
 	MG_ActionStr := "PostMessage, 0x001F, 0, 0"
+return
+
+MG_Gesture_RB_MB__:
+	if(MG_IsTarget5()){
+		;已读且删除当前邮件
+		Send,^q
+		Send,^d
+	}else if(MG_IsTarget2()){
+		;新开标签
+		Send,^t
+	}else{
+		MG_Cancel()
+	}
+return
+
+MG_GetAction_RB_MB__:
+	if(MG_IsTarget5()){
+		MG_ActionStr := "已读且删除当前邮件"
+	}else if(MG_IsTarget2()){
+		MG_ActionStr := "新开标签"
+	}else{
+		MG_ActionStr := ""
+	}
+return
+
+MG_Gesture_MB__:
+	if(MG_IsTarget5()){
+		;选择鼠标下邮件标为已读且删除
+		MouseClick
+		Send,^q
+		Send,^d
+	}else{
+		MG_Cancel()
+	}
+return
+
+MG_GetAction_MB__:
+	if(MG_IsTarget5()){
+		MG_ActionStr := "选择鼠标下邮件标为已读且删除"
+	}else{
+		MG_ActionStr := ""
+	}
 return
 
 
