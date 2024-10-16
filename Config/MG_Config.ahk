@@ -559,5 +559,37 @@ MG_GetAction_MB__:
 	}
 return
 
+MG_Gesture_MB_7_:
+	MoveIt(7)
+return
+
+MG_GetAction_MB_7_:
+	MG_ActionStr := "MoveIt(7)"
+return
+
+MG_Gesture_MB_9_:
+	MoveIt(9)
+return
+
+MG_GetAction_MB_9_:
+	MG_ActionStr := "MoveIt(9)"
+return
+
+MG_Gesture_MB_1_:
+	MoveIt(1)
+return
+
+MG_GetAction_MB_1_:
+	MG_ActionStr := "MoveIt(1)"
+return
+
+MG_Gesture_MB_3_:
+	MoveIt(3)
+return
+
+MG_GetAction_MB_3_:
+	MG_ActionStr := "MoveIt(3)"
+return
+
 
 MG_Config_end:
