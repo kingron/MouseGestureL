@@ -157,6 +157,36 @@ GetAndSetBingWallpaper() {
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
+^#b::
+  ClipBoard := b64Encode(Clipboard)
+  SendInput ^v
+  return
+#+b::
+  ClipBoard := b64Decode(Clipboard)
+  SendInput ^v
+  return
+
+b64Encode(string)
+{
+    VarSetCapacity(bin, StrPut(string, "UTF-8")) && len := StrPut(string, &bin, "UTF-8") - 1 
+    if !(DllCall("crypt32\CryptBinaryToString", "ptr", &bin, "uint", len, "uint", 0x40000001, "ptr", 0, "uint*", size))
+        throw Exception("CryptBinaryToString failed", -1)
+    VarSetCapacity(buf, size << 1, 0)
+    if !(DllCall("crypt32\CryptBinaryToString", "ptr", &bin, "uint", len, "uint", 0x40000001, "ptr", &buf, "uint*", size))
+        throw Exception("CryptBinaryToString failed", -1)
+    return StrGet(&buf)
+}
+
+b64Decode(string)
+{
+    if !(DllCall("crypt32\CryptStringToBinary", "ptr", &string, "uint", 0, "uint", 0x1, "ptr", 0, "uint*", size, "ptr", 0, "ptr", 0))
+        throw Exception("CryptStringToBinary failed", -1)
+    VarSetCapacity(buf, size, 0)
+    if !(DllCall("crypt32\CryptStringToBinary", "ptr", &string, "uint", 0, "uint", 0x1, "ptr", &buf, "uint*", size, "ptr", 0, "ptr", 0))
+        throw Exception("CryptStringToBinary failed", -1)
+    return StrGet(&buf, size, "UTF-8")
+}
+
 #c::Run cmd.exe, % A_Desktop
 ; #d:: 最小化桌面
 ; Ctrl+Win+D，重复当前行
@@ -168,7 +198,11 @@ GetAndSetBingWallpaper() {
 	return
 ; #e:: 资源管理器
 #f::Run hfs.exe
-#g::Run gost -C D:\Tools\gost.json
+#g:: 
+	;Run gost -C D:\Tools\gost.json
+	Run,putty @gcp
+	Run, D:\Tools\privoxy\privoxy.exe, D:\Tools\privoxy
+	return
 ^#g::   ; 随机密码生成
     InputBox, length, 随机密码, `n请输入随机密码字符串长度,,300,150,,,,,10
 	if (ErrorLevel)
