@@ -158,12 +158,28 @@ GetAndSetBingWallpaper() {
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
 ^#b::
-  ClipBoard := b64Encode(Clipboard)
-  SendInput ^v
+  WinGet, exe, ProcessName, A
+  if (exe="mstsc.exe") {
+    OSD("请在远程桌面中启动记事本，关闭输入法，远程桌面退出全屏模式")
+    txt := Clipboard
+    len := StrLen(txt)
+    txt := StrReplace(txt, "`r", "")
+    SendRaw % txt
+	Send ^a^c
+	OSD("发送完成，原文长度: " . len)
+  } else {
+    SendInput ^v
+  }
   return
 #+b::
-  ClipBoard := b64Decode(Clipboard)
-  SendInput ^v
+  ClipBoard := b64Encode(Clipboard)
+  WinGet, exe, ProcessName, A
+  if (exe="mstsc.exe") {
+    SendRaw % ClipBoard
+	OSD("发送完成!")
+  } else {
+    SendInput ^v
+  }
   return
 
 b64Encode(string)
