@@ -1612,6 +1612,14 @@ MButton:: ; middle click
 	WinMove, A,,,,w - 50,h - 50
 	return
 #If
+#WheelUp::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w - 10,h - 10
+	return
+#WheelDown::
+	WinGetPos, x, y, w, h, A
+	WinMove, A,,,,w + 10,h + 10
+	return
 !MButton::
 	if (!WinSize)
 		WinSize := "1024x768"
