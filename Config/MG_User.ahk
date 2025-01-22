@@ -1221,7 +1221,7 @@ ProcessChineseChars(string)
 
 ^#v::
 ~Ctrl & MButton::
-	OSD("请在远程桌面中启动记事本，关闭输入法，远程桌面退出全屏模式")
+	OSD("请在远程桌面中启动记事本，关闭输入法")
 	txt := Clipboard
 	len := StrLen(txt)
 	RunWait, rdp.ahk
