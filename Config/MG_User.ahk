@@ -157,30 +157,7 @@ GetAndSetBingWallpaper() {
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
-^#b::
-  WinGet, exe, ProcessName, A
-  if (exe="mstsc.exe") {
-    OSD("请在远程桌面中启动记事本，关闭输入法，远程桌面退出全屏模式")
-    txt := Clipboard
-    len := StrLen(txt)
-    txt := StrReplace(txt, "`r", "")
-    SendRaw % txt
-	Send ^a^c
-	OSD("发送完成，原文长度: " . len)
-  } else {
-    SendInput ^v
-  }
-  return
-#+b::
-  ClipBoard := b64Encode(Clipboard)
-  WinGet, exe, ProcessName, A
-  if (exe="mstsc.exe") {
-    SendRaw % ClipBoard
-	OSD("发送完成!")
-  } else {
-    SendInput ^v
-  }
-  return
+#+b::ClipBoard := b64Encode(Clipboard)
 
 b64Encode(string)
 {
@@ -1235,12 +1212,21 @@ ProcessChineseChars(string)
 	Return
 
 ; Ctrl, Alt 键在远程桌面失效，可以在本地和远程都安装AHK，然后分别写如下代码来避免，原理是利用App键中转绕过去
-#IfWinActive, ahk_exe mstsc.exe|dsTermServ.exe
+#IfWinActive, ahk_exe mstsc.exe
 ; 本地，客户端
 *^AppsKey::^LAlt
 
 ; 远程server 端
 ; *^LAlt::^AppsKey
+
+^#v::
+~Ctrl & MButton::
+	OSD("请在远程桌面中启动记事本，关闭输入法，远程桌面退出全屏模式")
+	txt := Clipboard
+	len := StrLen(txt)
+	RunWait, rdp.ahk
+	OSD("发送完成，原文长度: " . len)
+	return
 #IfWinActive
 
 ~LButton & WheelUp:: Send {Media_Prev}
