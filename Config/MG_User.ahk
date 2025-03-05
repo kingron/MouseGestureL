@@ -157,7 +157,7 @@ GetAndSetBingWallpaper() {
 
 #a::Run autoruns.exe
 #b::Run "https://start.duckduckgo.com"
-#+b::ClipBoard := b64Encode(Clipboard)
+#+b::Clipboard := b64Encode(Clipboard)
 
 b64Encode(string)
 {
@@ -190,12 +190,8 @@ b64Decode(string)
 	SendInput ^v
 	return
 ; #e:: 资源管理器
-#f::Run hfs.exe
-#g:: 
-	;Run gost -C D:\Tools\gost.json
-	Run,putty @gcp
-	Run, D:\Tools\privoxy\privoxy.exe, D:\Tools\privoxy
-	return
+#f::Run compmgmt.msc,,Max
+#g::Run "https://www.google.com/ncr"
 ^#g::   ; 随机密码生成
     InputBox, length, 随机密码, `n请输入随机密码字符串长度,,300,150,,,,,10
 	if (ErrorLevel)
@@ -269,7 +265,7 @@ b64Decode(string)
 		Gui, Destroy
 		Reload
 	    return
-#i::Run compmgmt.msc,,Max
+;#i:: 系统设置
 #j::Run "C:\Program Files\Git\git-bash.exe"
 #k::Run "putty.exe" @gcp
 #^k::
@@ -384,6 +380,22 @@ b64Decode(string)
 	ClipBoard = %Clip0%
 	VarSetCapacity(Clip0, 0)
 	Return
+	
+clipboardToImageFile(filePath) {
+ pToken  := Gdip_Startup()
+ pBitmap := Gdip_CreateBitmapFromClipboard() ; Clipboard -> bitmap
+ Gdip_SaveBitmapToFile(pBitmap, filePath)    ; Bitmap    -> file
+ Gdip_DisposeImage(pBitmap), Gdip_Shutdown(pToken)
+}
+
+; Win+Shift+V，解码二维码并设置文本到剪切板
+#+V::
+	tempFile := A_Temp "\$qrcode$.png"
+	clipboardToImageFile(tempFile)
+    cmd := "D:\Tools\zbar\zbarimg.exe -q --raw " . tempFile
+    Clipboard := Exec(cmd)
+	FileDelete, %tempFile%
+return
 #!v::Run rundll32.exe sysdm.cpl`,EditEnvironmentVariables
 #w::WinClose,A
 #^w::
@@ -783,12 +795,6 @@ F3:: SendInput !{home}
 #IfWinActive
 
 ^PrintScreen::
-	Process, Exist, Snagit32.exe
-	if (ErrorLevel == 0) {
-		Run D:\Tools\SnagIt\Snagit32.exe
-		Sleep 3000
-	}
-	Run D:\Tools\SnagIt\Snagit32.exe /ci
 	return
 
 ; Ctrl + Win + ]，滚轮缩放放大
@@ -1205,7 +1211,7 @@ ProcessChineseChars(string)
 	DllCall("DeleteObject", "Ptr", hBitmap)
 	text := ocr(pIRandomAccessStream, "zh-Hans-CN")
 	OutputDebug OCR: %text%
-    text := ProcessChineseChars(text)
+	text := ProcessChineseChars(text)
 	OutputDebug After space: %text%
 	ObjRelease(pIRandomAccessStream)
 	showMessage("识别结果", text)
@@ -1221,11 +1227,13 @@ ProcessChineseChars(string)
 
 ^#v::
 ~Ctrl & MButton::
-	OSD("请在远程桌面中启动记事本，关闭输入法")
-	txt := Clipboard
-	len := StrLen(txt)
+	len := StrLen(Clipboard)
+	OSD("请在远程桌面中启动记事本，关闭输入法。预计耗时约 " . Round(len / 55, 0.01) . " 秒")
+	startTime := A_TickCount
 	RunWait, rdp.ahk
-	OSD("发送完成，原文长度: " . len)
+	duration := (A_TickCount - startTime - 1000) / 1000
+	msg := "发送完成，原文长度: " . len . ", 耗时: " . Round(duration, 0.01) . " 秒, 平均速度: " . Round(len/duration, 0.01) . " 字符/秒"
+	OSD(msg)
 	return
 #IfWinActive
 
@@ -1472,8 +1480,7 @@ drawAscii(hWnd, w, h) {
 
 #MButton::
 #!x::
-	#include gdip.ahk
-	#include ocr.ahk
+	#include %A_ScriptDir%\ocr.ahk
 
 	SysGet, xPrimary, 76  ; 获取主屏幕左上角X坐标
 	SysGet, yPrimary, 77  ; 获取主屏幕左上角Y坐标
@@ -1581,6 +1588,7 @@ MButton:: ; middle click
 	WinGetPos, x, y, w, h, A
 	WinMove, A,,,,, h + 50
 	return
+#WheelDown::
 ^+WheelDown::
 	WinGetPos, x, y, w, h, A
 	WinMove, A,,,,w + 50,h + 50
@@ -1593,6 +1601,7 @@ MButton:: ; middle click
 	WinGetPos, x, y, w, h, A
 	WinMove, A,,,,,h - 50
 	return
+#WheelUp::
 ^+WheelUp::
 	WinGetPos, x, y, w, h, A
 	WinMove, A,,,,w - 50,h - 50
@@ -1606,6 +1615,7 @@ MButton:: ; middle click
 	WinGetPos, x, y, w, h, A
 	WinMove, A,,,,w + 10,h + 10
 	return
+
 !MButton::
 	if (!WinSize)
 		WinSize := "1024x768"
@@ -1622,4 +1632,6 @@ MButton:: ; middle click
 		OSD("请输入类似 '800x600' 的格式")
 	}
 	return
+; Launch_App2::Run calc ; 对应罗技键盘 计算器按钮 
+#F2:: Run, shutdown /s /t 0
 End:
