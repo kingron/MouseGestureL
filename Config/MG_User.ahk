@@ -7,6 +7,8 @@ global winhole := 0
 global spyPID := 0
 global wallpaper := 0
 global hideWindows := []
+global	player := ComObjCreate("WMPlayer.OCX")
+player.URL := "https://stream.srg-ssr.ch/m/rsp/mp3_128"
 
 SetTimer, GetAndSetBingWallpaper, 3600000
 GetAndSetBingWallpaper()
@@ -286,6 +288,16 @@ b64Decode(string)
 	return
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
+^#m::
+	global player
+	if (player.playState = 3) {
+	  OSD("停止播放")
+	  player.controls.stop()
+	} else {
+      OSD("开始播放")
+	  player.controls.play()
+	}
+	return
 #m::Run "SumatraPDF.exe"
 #n::Run Notepad++
 #o::
@@ -1118,7 +1130,11 @@ WheelDown:: Send {Volume_Down}
 ^WheelDown:: AdjustScreenBrightness(-5)
 ^MButton:: Send {Media_Next}
 !MButton:: Send {Media_Prev}
-MButton:: Send {Media_Play_Pause}
+MButton::
+  Send {Media_Play_Pause}
+  global player
+  player.controls.stop()
+  return
 MouseIsOver(WinTitle) {
 	MouseGetPos,,, Win
 	return WinExist(WinTitle . " ahk_id " . Win)
