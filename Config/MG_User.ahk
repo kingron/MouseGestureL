@@ -1273,6 +1273,41 @@ Capslock & c::
     decodedURL := UriDecode(Clipboard)
     Clipboard := decodedURL ; 将解码后的地址复制到剪贴板
     Return
+
+MButton::
+    Send, !d ; 切换到地址栏
+    Sleep, 100
+    Send, ^c ; 复制地址
+    Sleep, 100
+    url := UriDecode(Clipboard)
+
+    if (url = "") {
+        Send {MButton}  ; 如果获取URL失败，发送原始中键点击
+        return
+    }
+    
+    ; 检查URL是否以斜杠结尾
+    if (SubStr(url, 0) = "/") {
+        url := SubStr(url, 1, StrLen(url) - 1)
+    }
+
+    ; 查找最后一个斜杠的位置
+    lastSlashPos := InStr(url, "/", 0, -1)
+    if (lastSlashPos > 8) {  ; 8是http://或https://的长度
+        newUrl := SubStr(url, 1, lastSlashPos - 1)
+
+        ; 导航到新URL
+        Clipboard := newUrl
+        Send ^l  ; 全选地址栏
+        Sleep 50
+        Send ^v  ; 粘贴新URL
+        Sleep 50
+        Send {Enter}
+    } else {
+        ; 如果已经在顶级目录，发送原始中键点击
+        Send {MButton}
+    }
+return
 #IfWinActive
 
 #Include %A_ScriptDir%\ActiveScript.ahk
