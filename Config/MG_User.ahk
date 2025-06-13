@@ -1274,7 +1274,7 @@ Capslock & c::
     Clipboard := decodedURL ; 将解码后的地址复制到剪贴板
     Return
 
-MButton::
+^MButton::
     Send, !d ; 切换到地址栏
     Sleep, 100
     Send, ^c ; 复制地址
