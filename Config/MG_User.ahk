@@ -289,6 +289,7 @@ b64Decode(string)
 ; #l:: 锁定计算机
 ; #m:: 最小化所有
 ^#m::
+~Media_Play_Pause::
 	global player
 	if (player.playState = 3) {
 	  OSD("停止播放")
